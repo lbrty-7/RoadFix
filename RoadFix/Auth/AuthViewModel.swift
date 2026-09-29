@@ -106,35 +106,40 @@ final class AuthViewModel: ObservableObject {
                     self.finishSubmitting()
                     return
                 }
-                self.resolveRole(staffCode: staffCode) { role in
-                    self.createUserProfile(uid: firebaseUser.uid, email: email, role: role, createdUser: firebaseUser)
-                }
+                let trimmedCode = staffCode?.trimmingCharacters(in: .whitespaces) ?? ""
+                self.createUserProfile(
+                    uid: firebaseUser.uid,
+                    email: email,
+                    staffCode: trimmedCode.isEmpty ? nil : trimmedCode,
+                    createdUser: firebaseUser
+                )
             }
         }
     }
 
-    private func resolveRole(staffCode: String?, completion: @escaping @MainActor (String) -> Void) {
-        guard let staffCode, !staffCode.trimmingCharacters(in: .whitespaces).isEmpty else {
-            completion(AppUser.citizenRole)
-            return
-        }
-        db.collection("config").document("staffInviteCode").getDocument { snapshot, _ in
-            let storedCode = snapshot?.data()?["code"] as? String
-            let role = storedCode == staffCode ? AppUser.staffRole : AppUser.citizenRole
-            Task { @MainActor in completion(role) }
-        }
-    }
-
-    private func createUserProfile(uid: String, email: String, role: String, createdUser: User) {
-        let data: [String: Any] = [
+    // The staff code is checked by the Firestore rules, not here: the client
+    // can't read config/staffInviteCode. With a code we ask for a staff
+    // profile; if the rules reject it (wrong code), we retry as a citizen,
+    // so a wrong code still gives a working citizen account.
+    private func createUserProfile(uid: String, email: String, staffCode: String?, createdUser: User) {
+        let role = staffCode == nil ? AppUser.citizenRole : AppUser.staffRole
+        var data: [String: Any] = [
             "email": email,
             "role": role,
             "createdAt": FieldValue.serverTimestamp()
         ]
+        if let staffCode {
+            data["staffCode"] = staffCode
+        }
         db.collection("users").document(uid).setData(data) { [weak self] error in
             let failed = error != nil
+            let rejectedByRules = (error as NSError?)?.code == FirestoreErrorCode.Code.permissionDenied.rawValue
             Task { @MainActor in
                 guard let self else { return }
+                if failed && staffCode != nil && rejectedByRules {
+                    self.createUserProfile(uid: uid, email: email, staffCode: nil, createdUser: createdUser)
+                    return
+                }
                 if failed {
                     // This is a Firestore error, not an Auth error — mapAuthError
                     // only understands AuthErrorCode, so don't route it there.

@@ -23,7 +23,7 @@ struct MyReportsView: View {
                     Button {
                         selectedReport = report
                     } label: {
-                        MyReportRow(report: report)
+                        MyReportRow(report: report, reportService: reportService)
                     }
                     .tint(.primary)
                 }
@@ -37,6 +37,7 @@ struct MyReportsView: View {
 
 private struct MyReportRow: View {
     let report: Report
+    @ObservedObject var reportService: ReportService
 
     var body: some View {
         HStack(spacing: 12) {
@@ -50,6 +51,9 @@ private struct MyReportRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(report.category.title)
                     .font(.subheadline.bold())
+                ReportAddressView(report: report, reportService: reportService)
+                    .font(.caption)
+                    .lineLimit(1)
                 Text(report.description)
                     .font(.caption)
                     .foregroundStyle(.secondary)

@@ -10,21 +10,32 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
     }
 
+    // A new profile may be "citizen", or "staff" only if it carries the
+    // correct invite code. The check happens here, server-side, so calling
+    // Firestore directly can't skip it. get() fails if the config doc is
+    // missing, which denies staff sign-up rather than allowing it.
+    function isValidNewProfile() {
+      let data = request.resource.data;
+      return data.keys().hasOnly(['email', 'role', 'createdAt', 'staffCode'])
+          && (data.role == "citizen"
+              || (data.role == "staff"
+                  && data.get('staffCode', '') == get(/databases/$(database)/documents/config/staffInviteCode).data.code));
+    }
+
     // Each user can read/create their own profile doc, and can update it
     // as long as they don't change their own role after creation.
     match /users/{userId} {
       allow read: if isSignedIn() && request.auth.uid == userId;
-      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidNewProfile();
       allow update: if isSignedIn() && request.auth.uid == userId
                     && request.resource.data.role == resource.data.role;
       allow delete: if false;
     }
 
-    // Readable by any signed-in client (needed for the signup staff-code
-    // check); never writable from a client.
+    // Never readable or writable from a client — the staff code is only
+    // compared inside isValidNewProfile() above.
     match /config/{docId} {
-      allow read: if isSignedIn();
-      allow write: if false;
+      allow read, write: if false;
     }
 
     // Written by ReportService.swift. Field names and the status values
@@ -66,6 +77,20 @@ service cloud.firestore {
                      );
 
       allow delete: if false;
+    }
+
+    // One photo per report, written by ReportService.swift in the same
+    // batch as the report. getAfter() sees that batched report, so only the
+    // report's own reporter can attach its photo. Anyone signed in (citizen
+    // or staff) can view it. Size limit matches maxPhotoBytes in the app.
+    match /reportPhotos/{reportId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+                    && getAfter(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid
+                    && request.resource.data.keys().hasOnly(['data'])
+                    && request.resource.data.data is bytes
+                    && request.resource.data.data.size() < 900 * 1024;
+      allow update, delete: if false;
     }
   }
 }

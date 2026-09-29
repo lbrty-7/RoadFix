@@ -27,6 +27,10 @@ struct StaffDashboardView: View {
                                 StatusBadge(status: report.status)
                             }
 
+                            ReportAddressView(report: report, reportService: reportService)
+                                .font(.caption)
+                                .lineLimit(1)
+
                             Text(report.description)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)

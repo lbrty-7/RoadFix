@@ -51,7 +51,8 @@ struct Report: Identifiable, Equatable {
     let id: String            // Firestore document ID
     var category: ReportCategory
     var description: String
-    var photoURL: String?
+    var hasPhoto: Bool        // photo itself is in reportPhotos/{id}
+    var address: String?      // street and city; nil on reports filed before this was saved
     var latitude: Double
     var longitude: Double
     var status: ReportStatus
