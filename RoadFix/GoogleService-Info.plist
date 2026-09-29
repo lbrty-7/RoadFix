@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>297160976917-nq9p89n7ia2if4je2d2l43russ40soib.apps.googleusercontent.com</string>
+	<string>297160976917-jq3g52o2ma1367qmer0dl14jbut8gks5.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.297160976917-nq9p89n7ia2if4je2d2l43russ40soib</string>
+	<string>com.googleusercontent.apps.297160976917-jq3g52o2ma1367qmer0dl14jbut8gks5</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBk7CRGrQQNiLwijeqWVCk8y5s0aWYgGpI</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.yourname.RoadFix</string>
+	<string>md.roadfix.RoadFix</string>
 	<key>PROJECT_ID</key>
 	<string>roadfix-8ee96</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:297160976917:ios:2217d042d9c5c74dd8fc1c</string>
+	<string>1:297160976917:ios:ac3f22922c8730cfd8fc1c</string>
 </dict>
 </plist>
