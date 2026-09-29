@@ -9,18 +9,18 @@ struct ContentView: View {
         TabView {
             NavigationStack {
                 MapView(reportService: reportService, showingNewReport: $showingNewReport)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        // The title sits on the same row as the account button.
-                        ToolbarItem(placement: .topBarLeading) {
+                    // The system navigation bar draws a blurred band over the map,
+                    // so hide it and float the title and account button on the map instead.
+                    .toolbarVisibility(.hidden, for: .navigationBar)
+                    .overlay(alignment: .top) {
+                        HStack {
                             Text("RoadFix")
                                 .font(.title.bold())
-                        }
-                        .sharedBackgroundVisibility(.hidden)
-
-                        ToolbarItem(placement: .topBarTrailing) {
+                            Spacer()
                             accountMenu
                         }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 4)
                     }
             }
             .tabItem {
@@ -78,7 +78,13 @@ struct ContentView: View {
             }
         } label: {
             Image(systemName: "person.crop.circle")
+                .font(.title2)
+                .foregroundStyle(.primary)
+                .frame(width: 44, height: 44)
+                .glassEffect(.regular.interactive(), in: .circle)
         }
+        .tint(.primary)
+        .accessibilityLabel("Account")
     }
 }
 

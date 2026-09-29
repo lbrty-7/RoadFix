@@ -25,6 +25,8 @@ struct MapView: View {
                     }
                 }
             }
+            // Draw the map under the title bar instead of stopping below it.
+            .ignoresSafeArea(edges: .top)
             .sheet(item: $selectedReport) { report in
                 ReportDetailView(reportID: report.id, reportService: reportService)
             }

@@ -63,18 +63,11 @@ struct AuthHeader: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            Image(systemName: "road.lanes")
-                .font(.system(size: 34, weight: .semibold))
-                .foregroundStyle(.white)
+            Image("Logo")
+                .resizable()
+                .scaledToFit()
                 .frame(width: 72, height: 72)
-                .background(
-                    LinearGradient(
-                        colors: [Color.accentColor, Color.accentColor.opacity(0.75)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    in: .rect(cornerRadius: 18)
-                )
+                .clipShape(.rect(cornerRadius: 18))
                 .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                 .accessibilityHidden(true)
 
