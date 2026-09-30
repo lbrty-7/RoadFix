@@ -3,6 +3,7 @@ import SwiftUI
 struct StaffDashboardView: View {
     @ObservedObject var reportService: ReportService
     @State private var selectedReport: Report?
+    @State private var reportToDelete: Report?
 
     var body: some View {
         List(reportService.reports) { report in
@@ -53,9 +54,30 @@ struct StaffDashboardView: View {
                 .pickerStyle(.segmented)
             }
             .padding(.vertical, 4)
+            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                Button("Delete", systemImage: "trash", role: .destructive) {
+                    reportToDelete = report
+                }
+            }
         }
         .sheet(item: $selectedReport) { report in
             ReportDetailView(reportID: report.id, reportService: reportService)
+        }
+        // Deleting can't be undone, so ask before removing the report.
+        .alert(
+            "Delete Report?",
+            isPresented: Binding(
+                get: { reportToDelete != nil },
+                set: { if !$0 { reportToDelete = nil } }
+            ),
+            presenting: reportToDelete
+        ) { report in
+            Button("Delete", role: .destructive) {
+                reportService.deleteReport(report)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { _ in
+            Text("This permanently removes the report and its photo for everyone.")
         }
     }
 }

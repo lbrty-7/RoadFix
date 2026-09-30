@@ -13,6 +13,9 @@ struct NewReportView: View {
     @State private var description: String = ""
     @State private var selectedItem: PhotosPickerItem?
     @State private var selectedImage: UIImage?
+    @State private var showPhotoSourceDialog = false
+    @State private var showPhotoLibrary = false
+    @State private var showCamera = false
     @State private var isSubmitting = false
     @State private var submitError: String?
     // Where the report will be filed. Starts at the user's location and
@@ -39,7 +42,9 @@ struct NewReportView: View {
         NavigationStack {
             Form {
                 Section("Photo") {
-                    PhotosPicker(selection: $selectedItem, matching: .images) {
+                    Button {
+                        showPhotoSourceDialog = true
+                    } label: {
                         if let selectedImage {
                             Image(uiImage: selectedImage)
                                 .resizable()
@@ -48,6 +53,23 @@ struct NewReportView: View {
                         } else {
                             Label("Add a photo", systemImage: "camera.fill")
                         }
+                    }
+                    .confirmationDialog("Add a Photo", isPresented: $showPhotoSourceDialog, titleVisibility: .visible) {
+                        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                            Button("Take Photo") { showCamera = true }
+                        }
+                        Button("Choose from Library") { showPhotoLibrary = true }
+                        if selectedImage != nil {
+                            Button("Remove Photo", role: .destructive) {
+                                selectedImage = nil
+                                selectedItem = nil
+                            }
+                        }
+                    }
+                    .photosPicker(isPresented: $showPhotoLibrary, selection: $selectedItem, matching: .images)
+                    .fullScreenCover(isPresented: $showCamera) {
+                        CameraPicker(image: $selectedImage)
+                            .ignoresSafeArea()
                     }
                     .onChange(of: selectedItem) { _, newItem in
                         Task {
@@ -193,6 +215,45 @@ struct NewReportView: View {
             } else {
                 submitError = "Check your connection and try again."
             }
+        }
+    }
+}
+
+/// Wraps UIImagePickerController so the user can take a photo with the camera,
+/// since SwiftUI's PhotosPicker only reads from the photo library.
+private struct CameraPicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Environment(\.dismiss) private var dismiss
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: CameraPicker
+
+        init(_ parent: CameraPicker) {
+            self.parent = parent
+        }
+
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.image = image
+            }
+            parent.dismiss()
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.dismiss()
         }
     }
 }

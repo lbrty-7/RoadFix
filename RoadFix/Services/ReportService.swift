@@ -138,6 +138,21 @@ class ReportService: ObservableObject {
         reportsCollection.document(report.id).updateData(["status": status.rawValue])
     }
 
+    // firestore.rules only lets staff delete. The report and its photo doc
+    // go in one batch so a photo is never left behind without its report.
+    func deleteReport(_ report: Report) {
+        let batch = db.batch()
+        batch.deleteDocument(reportsCollection.document(report.id))
+        batch.deleteDocument(photosCollection.document(report.id))
+        batch.commit { [weak self] error in
+            if let error {
+                print("Delete report error: \(error.localizedDescription)")
+            } else {
+                self?.photoCache.removeObject(forKey: report.id as NSString)
+            }
+        }
+    }
+
     // Firestore docs max out at 1 MiB, so shrink to 1280px on the long side
     // and lower JPEG quality until the photo fits under maxPhotoBytes
     // (the same limit firestore.rules enforces).

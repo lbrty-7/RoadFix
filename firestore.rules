@@ -76,7 +76,8 @@ service cloud.firestore {
                        isOwnUpvoteChange()
                      );
 
-      allow delete: if false;
+      // Only staff may delete a report (StaffDashboardView swipe-to-delete).
+      allow delete: if isSignedIn() && userRole() == "staff";
     }
 
     // One photo per report, written by ReportService.swift in the same
@@ -90,7 +91,9 @@ service cloud.firestore {
                     && request.resource.data.keys().hasOnly(['data'])
                     && request.resource.data.data is bytes
                     && request.resource.data.data.size() < 900 * 1024;
-      allow update, delete: if false;
+      allow update: if false;
+      // Staff delete the photo together with its report.
+      allow delete: if isSignedIn() && userRole() == "staff";
     }
   }
 }
