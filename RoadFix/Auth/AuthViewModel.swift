@@ -172,6 +172,30 @@ final class AuthViewModel: ObservableObject {
         }
     }
 
+    // Firebase only lets a password change through right after signing in,
+    // so confirm the current password first, then set the new one.
+    func changePassword(currentPassword: String, newPassword: String) async throws {
+        guard let user = Auth.auth().currentUser, let email = user.email else {
+            throw NSError(domain: AuthErrors.domain, code: AuthErrorCode.userNotFound.rawValue)
+        }
+        let credential = EmailAuthProvider.credential(withEmail: email, password: currentPassword)
+        _ = try await user.reauthenticate(with: credential)
+        try await user.updatePassword(to: newPassword)
+    }
+
+    nonisolated static func changePasswordErrorMessage(_ error: Error) -> String {
+        switch AuthErrorCode(rawValue: (error as NSError).code) {
+        case .wrongPassword, .invalidCredential:
+            return "Your current password is incorrect."
+        case .userNotFound, .userMismatch:
+            return "You're signed out. Sign in and try again."
+        case .tooManyRequests:
+            return "Too many attempts. Wait a few minutes and try again."
+        default:
+            return mapAuthError(error)
+        }
+    }
+
     // Static and nonisolated so it can run inside Firebase's Sendable callbacks.
     private nonisolated static func mapAuthError(_ error: Error) -> String {
         let nsError = error as NSError

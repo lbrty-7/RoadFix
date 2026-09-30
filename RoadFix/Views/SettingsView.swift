@@ -28,6 +28,9 @@ struct SettingsView: View {
             Section("Account") {
                 LabeledContent("Email", value: authViewModel.currentUser?.email ?? "")
                 LabeledContent("Role", value: authViewModel.currentUser?.isStaff == true ? "Staff" : "Citizen")
+                NavigationLink("Change Password") {
+                    ChangePasswordView()
+                }
             }
 
             Section {
