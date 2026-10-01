@@ -10,6 +10,7 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var showSignUp = false
+    @State private var showForgotPassword = false
     @FocusState private var focus: AuthFocus?
 
     private var canSubmit: Bool {
@@ -60,6 +61,11 @@ struct LoginView: View {
                     action: submit
                 )
 
+                Button("Forgot Password?") {
+                    showForgotPassword = true
+                }
+                .font(.footnote)
+
                 Spacer(minLength: 0)
 
                 HStack(spacing: 4) {
@@ -74,6 +80,9 @@ struct LoginView: View {
             }
             .navigationDestination(isPresented: $showSignUp) {
                 SignUpView()
+            }
+            .sheet(isPresented: $showForgotPassword) {
+                ForgotPasswordView(email: email)
             }
         }
     }

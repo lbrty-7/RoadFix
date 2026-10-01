@@ -5,6 +5,12 @@ struct ContentView: View {
     @StateObject private var reportService = ReportService()
     @State private var showingNewReport = false
 
+    // The user's reports whose status staff changed since they last looked.
+    private var updatedReportCount: Int {
+        guard let uid = authViewModel.currentUser?.id else { return 0 }
+        return reportService.reports.filter { $0.reporterId == uid && reportService.hasUnseenUpdate($0) }.count
+    }
+
     var body: some View {
         TabView {
             NavigationStack {
@@ -34,6 +40,7 @@ struct ContentView: View {
             .tabItem {
                 Label("My Reports", systemImage: "list.bullet.rectangle")
             }
+            .badge(updatedReportCount)
 
             // Only staff accounts get the dashboard. The role comes from the
             // user's Firestore profile, and firestore.rules enforces the same
@@ -59,6 +66,7 @@ struct ContentView: View {
         .sheet(isPresented: $showingNewReport) {
             NewReportView(reportService: reportService)
         }
+        .reportActionErrorAlert(reportService)
         .onAppear {
             reportService.startListening()
         }
@@ -71,7 +79,7 @@ struct ContentView: View {
         Menu {
             if let user = authViewModel.currentUser {
                 Text(user.email)
-                Text("Role: \(user.role)")
+                Text(user.isStaff ? "Role: Staff" : "Role: Citizen")
             }
             Button("Sign Out", role: .destructive) {
                 authViewModel.signOut()

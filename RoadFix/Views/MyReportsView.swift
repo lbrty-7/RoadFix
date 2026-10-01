@@ -35,6 +35,16 @@ struct MyReportsView: View {
     }
 }
 
+// Small dot before the text, like an unread marker in Mail.
+private struct UpdatedLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 4) {
+            configuration.icon.font(.system(size: 6))
+            configuration.title
+        }
+    }
+}
+
 private struct MyReportRow: View {
     let report: Report
     @ObservedObject var reportService: ReportService
@@ -66,6 +76,12 @@ private struct MyReportRow: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 6) {
+                if reportService.hasUnseenUpdate(report) {
+                    Label("Updated", systemImage: "circle.fill")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.blue)
+                        .labelStyle(UpdatedLabelStyle())
+                }
                 StatusBadge(status: report.status)
                 Label("\(report.upvoteCount)", systemImage: "hand.thumbsup.fill")
                     .font(.caption)

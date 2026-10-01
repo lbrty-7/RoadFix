@@ -38,6 +38,13 @@ struct NewReportView: View {
         pinnedLocation.map { [$0.latitude, $0.longitude] }
     }
 
+    @State private var duplicateToView: Report?
+
+    private var possibleDuplicates: [Report] {
+        guard let pinnedLocation else { return [] }
+        return Report.possibleDuplicates(of: category, near: pinnedLocation, in: reportService.reports)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -112,7 +119,7 @@ struct NewReportView: View {
                     .listRowInsets(EdgeInsets())
 
                     if pinnedLocation != nil {
-                        Label(pinAddress ?? "Finding address…", systemImage: "mappin.and.ellipse")
+                        Label(pinAddress ?? String(localized: "Finding address…"), systemImage: "mappin.and.ellipse")
                             .font(.subheadline)
                             // Re-runs (and cancels the old lookup) each time the pin moves.
                             .task(id: pinnedLocationKey) {
@@ -148,6 +155,36 @@ struct NewReportView: View {
                 } footer: {
                     Text("Tap the map to move the pin to where the issue is.")
                 }
+
+                if let pinnedLocation, !possibleDuplicates.isEmpty {
+                    Section {
+                        ForEach(possibleDuplicates.prefix(3)) { report in
+                            Button {
+                                duplicateToView = report
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(report.description)
+                                            .lineLimit(2)
+                                        Text("\(Int(report.distance(to: pinnedLocation))) m away · \(report.upvoteCount) upvotes")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
+                                    StatusBadge(status: report.status)
+                                }
+                            }
+                            .tint(.primary)
+                        }
+                    } header: {
+                        Label("Already Reported Nearby?", systemImage: "exclamationmark.bubble")
+                    } footer: {
+                        Text("If one of these is the same issue, upvote it instead of filing a new report. Upvotes help staff see which issues matter most.")
+                    }
+                }
+            }
+            .sheet(item: $duplicateToView) { report in
+                ReportDetailView(reportID: report.id, reportService: reportService)
             }
             .navigationTitle("New Report")
             .toolbar {
@@ -213,7 +250,7 @@ struct NewReportView: View {
             if success {
                 dismiss()
             } else {
-                submitError = "Check your connection and try again."
+                submitError = String(localized: "Check your connection and try again.")
             }
         }
     }

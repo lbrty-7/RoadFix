@@ -4,9 +4,20 @@ struct StaffDashboardView: View {
     @ObservedObject var reportService: ReportService
     @State private var selectedReport: Report?
     @State private var reportToDelete: Report?
+    @State private var searchText = ""
+    @State private var sortOrder: ReportSortOrder = .newest
+    // nil shows every status.
+    @State private var statusFilter: ReportStatus?
+
+    private var shownReports: [Report] {
+        let filtered = reportService.reports.filter { report in
+            (statusFilter == nil || report.status == statusFilter) && report.matches(search: searchText)
+        }
+        return sortOrder.sorted(filtered)
+    }
 
     var body: some View {
-        List(reportService.reports) { report in
+        List(shownReports) { report in
             VStack(alignment: .leading, spacing: 6) {
                 // Borderless so only this part opens the report; otherwise the
                 // whole row (including the status picker) would act as one button.
@@ -36,6 +47,13 @@ struct StaffDashboardView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(2)
+
+                            HStack(spacing: 12) {
+                                Label("\(report.upvoteCount)", systemImage: "hand.thumbsup.fill")
+                                Text(report.createdAt.formatted(.relative(presentation: .named)))
+                            }
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                         }
                     }
                     .contentShape(Rectangle())
@@ -57,6 +75,37 @@ struct StaffDashboardView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                 Button("Delete", systemImage: "trash", role: .destructive) {
                     reportToDelete = report
+                }
+            }
+        }
+        .overlay {
+            if shownReports.isEmpty {
+                if reportService.reports.isEmpty {
+                    ContentUnavailableView("No Reports Yet", systemImage: "tray")
+                } else {
+                    ContentUnavailableView.search
+                }
+            }
+        }
+        .searchable(text: $searchText, prompt: "Search description or address")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    Picker("Sort", selection: $sortOrder) {
+                        ForEach(ReportSortOrder.allCases) { order in
+                            Text(order.title).tag(order)
+                        }
+                    }
+                    Picker("Status", selection: $statusFilter) {
+                        Text("All Statuses").tag(ReportStatus?.none)
+                        ForEach(ReportStatus.allCases, id: \.self) { status in
+                            Text(status.title).tag(Optional(status))
+                        }
+                    }
+                } label: {
+                    Label("Sort and Filter", systemImage: statusFilter == nil
+                        ? "line.3.horizontal.decrease.circle"
+                        : "line.3.horizontal.decrease.circle.fill")
                 }
             }
         }

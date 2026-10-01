@@ -1,0 +1,78 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "RoadFix"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix"
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription" : {
+      "comment" : "Privacy - Camera Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "RoadFix uses the camera so you can take a photo of the issue you are reporting."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix folosește camera pentru ca să puteți fotografia problema pe care o semnalați."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix использует камеру, чтобы вы могли сфотографировать проблему, о которой сообщаете."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Privacy - Location When In Use Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "RoadFix uses your location to pin the issue you are reporting on the map."
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix folosește locația dvs. pentru a marca pe hartă problema pe care o semnalați."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix использует вашу геопозицию, чтобы отметить на карте проблему, о которой вы сообщаете."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

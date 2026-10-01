@@ -13,10 +13,10 @@ struct ChangePasswordView: View {
 
     private var validationMessage: String? {
         if !newPassword.isEmpty && newPassword.count < 6 {
-            return "The new password must be at least 6 characters."
+            return String(localized: "The new password must be at least 6 characters.")
         }
         if !confirmPassword.isEmpty && newPassword != confirmPassword {
-            return "The new passwords don't match."
+            return String(localized: "The new passwords don't match.")
         }
         return nil
     }

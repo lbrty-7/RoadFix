@@ -23,13 +23,14 @@ service cloud.firestore {
     }
 
     // Each user can read/create their own profile doc, and can update it
-    // as long as they don't change their own role after creation.
+    // as long as they don't change their own role after creation. They can
+    // delete it as part of deleting their account (DeleteAccountView).
     match /users/{userId} {
       allow read: if isSignedIn() && request.auth.uid == userId;
       allow create: if isSignedIn() && request.auth.uid == userId && isValidNewProfile();
       allow update: if isSignedIn() && request.auth.uid == userId
                     && request.resource.data.role == resource.data.role;
-      allow delete: if false;
+      allow delete: if isSignedIn() && request.auth.uid == userId;
     }
 
     // Never readable or writable from a client — the staff code is only
@@ -56,28 +57,32 @@ service cloud.firestore {
       // initial status and no upvotes — they cannot set an arbitrary status
       // (e.g. "resolved") or fake upvotes at creation time. Without this, the
       // create path defeats the whole point of the update rule below.
+      // Staff-only fields (staffNote, statusHistory) can't be set either.
       allow create: if isSignedIn()
                     && request.resource.data.reporterId == request.auth.uid
                     && request.resource.data.status == "reported"
-                    && request.resource.data.upvoterIds == [];
+                    && request.resource.data.upvoterIds == []
+                    && !request.resource.data.keys().hasAny(['staffNote', 'statusHistory']);
 
-      // Staff can change anything, including status. The reporter may edit
-      // their own report, but not its status, owner or upvotes. Anyone
-      // signed in may toggle their own upvote.
+      // Staff can change anything: status, statusHistory and staffNote.
+      // The reporter may only fix the category and description of their own
+      // report, and only while it's still "reported" (EditReportView).
+      // Anyone signed in may toggle their own upvote.
       allow update: if isSignedIn() &&
                      (
                        userRole() == "staff" ||
                        (
                          resource.data.reporterId == request.auth.uid &&
-                         request.resource.data.status == resource.data.status &&
-                         request.resource.data.reporterId == resource.data.reporterId &&
-                         request.resource.data.get('upvoterIds', []) == resource.data.get('upvoterIds', [])
+                         resource.data.status == "reported" &&
+                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['category', 'description'])
                        ) ||
                        isOwnUpvoteChange()
                      );
 
-      // Only staff may delete a report (StaffDashboardView swipe-to-delete).
-      allow delete: if isSignedIn() && userRole() == "staff";
+      // Staff may delete any report (dashboard swipe-to-delete). Reporters
+      // may delete their own: withdrawing a report, or deleting their account.
+      allow delete: if isSignedIn() &&
+                     (userRole() == "staff" || resource.data.reporterId == request.auth.uid);
     }
 
     // One photo per report, written by ReportService.swift in the same
@@ -92,8 +97,11 @@ service cloud.firestore {
                     && request.resource.data.data is bytes
                     && request.resource.data.data.size() < 900 * 1024;
       allow update: if false;
-      // Staff delete the photo together with its report.
-      allow delete: if isSignedIn() && userRole() == "staff";
+      // Deleted in the same batch as its report, by staff or by the report's
+      // reporter. get() sees the report as it was before the batch.
+      allow delete: if isSignedIn() &&
+                     (userRole() == "staff" ||
+                      get(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid);
     }
   }
 }

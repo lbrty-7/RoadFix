@@ -13,10 +13,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C7FD602306D7B1C00B9B932 /* RoadFixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoadFixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		491F21C63061FD4500FA4CC8 /* RoadFix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoadFix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		0C7FD603306D7B1C00B9B932 /* RoadFixTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = RoadFixTests;
+			sourceTree = "<group>";
+		};
 		491F21C83061FD4500FA4CC8 /* RoadFix */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = RoadFix;
@@ -25,6 +31,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0C7FD5FF306D7B1C00B9B932 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		491F21C33061FD4500FA4CC8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -42,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				491F21C83061FD4500FA4CC8 /* RoadFix */,
+				0C7FD603306D7B1C00B9B932 /* RoadFixTests */,
 				491F21C73061FD4500FA4CC8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				491F21C63061FD4500FA4CC8 /* RoadFix.app */,
+				0C7FD602306D7B1C00B9B932 /* RoadFixTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,6 +72,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0C7FD601306D7B1C00B9B932 /* RoadFixTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C7FD606306D7B1C00B9B932 /* Build configuration list for PBXNativeTarget "RoadFixTests" */;
+			buildPhases = (
+				0C7FD5FE306D7B1C00B9B932 /* Sources */,
+				0C7FD5FF306D7B1C00B9B932 /* Frameworks */,
+				0C7FD600306D7B1C00B9B932 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0C7FD603306D7B1C00B9B932 /* RoadFixTests */,
+			);
+			name = RoadFixTests;
+			packageProductDependencies = (
+			);
+			productName = RoadFixTests;
+			productReference = 0C7FD602306D7B1C00B9B932 /* RoadFixTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		491F21C53061FD4500FA4CC8 /* RoadFix */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 491F21D13061FD4500FA4CC8 /* Build configuration list for PBXNativeTarget "RoadFix" */;
@@ -89,9 +126,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
+					0C7FD601306D7B1C00B9B932 = {
+						CreatedOnToolsVersion = 27.0;
+					};
 					491F21C53061FD4500FA4CC8 = {
 						CreatedOnToolsVersion = 26.3;
 						LastSwiftMigration = 2630;
@@ -104,6 +144,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ro,
+				ru,
 			);
 			mainGroup = 491F21BD3061FD4500FA4CC8;
 			minimizedProjectReferenceProxies = 1;
@@ -116,11 +158,19 @@
 			projectRoot = "";
 			targets = (
 				491F21C53061FD4500FA4CC8 /* RoadFix */,
+				0C7FD601306D7B1C00B9B932 /* RoadFixTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0C7FD600306D7B1C00B9B932 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		491F21C43061FD4500FA4CC8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -131,6 +181,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0C7FD5FE306D7B1C00B9B932 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		491F21C23061FD4500FA4CC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -141,6 +198,56 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		0C7FD607306D7B1C00B9B932 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.RoadFixTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoadFix.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoadFix";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		0C7FD608306D7B1C00B9B932 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.RoadFixTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoadFix.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoadFix";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
 		491F21CF3061FD4500FA4CC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -340,6 +447,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0C7FD606306D7B1C00B9B932 /* Build configuration list for PBXNativeTarget "RoadFixTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C7FD607306D7B1C00B9B932 /* Debug */,
+				0C7FD608306D7B1C00B9B932 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		491F21C13061FD4500FA4CC8 /* Build configuration list for PBXProject "RoadFix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

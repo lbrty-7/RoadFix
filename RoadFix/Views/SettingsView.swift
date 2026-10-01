@@ -9,11 +9,11 @@ struct SettingsView: View {
 
     private var locationStatusText: String {
         switch locationStatus {
-        case .authorizedWhenInUse, .authorizedAlways: return "While Using the App"
-        case .denied: return "Off"
-        case .restricted: return "Restricted"
-        case .notDetermined: return "Not Asked Yet"
-        @unknown default: return "Unknown"
+        case .authorizedWhenInUse, .authorizedAlways: return String(localized: "While Using the App")
+        case .denied: return String(localized: "Off")
+        case .restricted: return String(localized: "Restricted")
+        case .notDetermined: return String(localized: "Not Asked Yet")
+        @unknown default: return String(localized: "Unknown")
         }
     }
 
@@ -43,7 +43,7 @@ struct SettingsView: View {
             } header: {
                 Text("Privacy")
             } footer: {
-                Text("RoadFix only uses your location while you're creating a report.")
+                Text("RoadFix only uses your location while the app is open, to pin new reports and show where you are on the map.")
             }
 
             Section("About") {
@@ -53,6 +53,15 @@ struct SettingsView: View {
             Section {
                 Button("Sign Out", role: .destructive) {
                     authViewModel.signOut()
+                }
+            }
+
+            Section {
+                NavigationLink {
+                    DeleteAccountView()
+                } label: {
+                    Text("Delete Account")
+                        .foregroundStyle(.red)
                 }
             }
         }

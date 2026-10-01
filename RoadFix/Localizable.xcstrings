@@ -1,0 +1,2424 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%1$@, %2$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld m away · %lld upvotes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "%1$lld m away · %#@upvotes@"
+          },
+          "substitutions" : {
+            "upvotes" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg upvote"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg upvotes"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg upvotes"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "La %1$lld m distanță · %#@upvotes@"
+          },
+          "substitutions" : {
+            "upvotes" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg susțineri"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg susținere"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg de susțineri"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg susțineri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "В %1$lld м · %#@upvotes@"
+          },
+          "substitutions" : {
+            "upvotes" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg голоса"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg голосов"
+                    }
+                  },
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg голос"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg голоса"
+                    }
+                  },
+                  "zero" : {
+                    "stringUnit" : {
+                      "state" : "machine_translated",
+                      "value" : "%arg голосов"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Despre"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "О приложении"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cont"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Аккаунт"
+          }
+        }
+      }
+    },
+    "Add a photo" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adăugați o fotografie"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Добавить фото"
+          }
+        }
+      }
+    },
+    "Add a Photo" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adăugare fotografie"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Добавление фото"
+          }
+        }
+      }
+    },
+    "All Statuses" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Toate stările"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Все статусы"
+          }
+        }
+      }
+    },
+    "Already Reported Nearby?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Există deja o sesizare în apropiere?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Уже есть заявки поблизости?"
+          }
+        }
+      }
+    },
+    "An account with that email already exists." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Există deja un cont cu această adresă de e-mail."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Аккаунт с таким адресом электронной почты уже существует."
+          }
+        }
+      }
+    },
+    "Broken Streetlight" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Felinar defect"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Неисправный фонарь"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Anulați"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отменить"
+          }
+        }
+      }
+    },
+    "Category" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Categorie"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Категория"
+          }
+        }
+      }
+    },
+    "Change Password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Schimbați parola"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Изменить пароль"
+          }
+        }
+      }
+    },
+    "Check your connection and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Verificați conexiunea și încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Проверьте подключение и повторите попытку."
+          }
+        }
+      }
+    },
+    "Choose from Library" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Alegeți din bibliotecă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Выбрать из медиатеки"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Închideți"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Закрыть"
+          }
+        }
+      }
+    },
+    "Confirm It's You" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Confirmați-vă identitatea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Подтвердите, что это вы"
+          }
+        }
+      }
+    },
+    "Confirm new password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Confirmați parola nouă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Подтвердите новый пароль"
+          }
+        }
+      }
+    },
+    "Could not finish creating your account. Try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Crearea contului nu a putut fi finalizată. Încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось завершить создание аккаунта. Повторите попытку."
+          }
+        }
+      }
+    },
+    "Could not load your account profile." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Profilul contului nu a putut fi încărcat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось загрузить профиль аккаунта."
+          }
+        }
+      }
+    },
+    "Could not sign out. Try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deconectarea nu a reușit. Încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось выйти. Повторите попытку."
+          }
+        }
+      }
+    },
+    "Couldn't change the status." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Starea nu a putut fi modificată."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось изменить статус."
+          }
+        }
+      }
+    },
+    "Couldn't delete the report." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizarea nu a putut fi ștearsă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось удалить заявку."
+          }
+        }
+      }
+    },
+    "Couldn't save the note." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nota nu a putut fi salvată."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось сохранить примечание."
+          }
+        }
+      }
+    },
+    "Couldn't save your changes." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Modificările nu au putut fi salvate."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось сохранить изменения."
+          }
+        }
+      }
+    },
+    "Couldn't Submit Report" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizarea nu a putut fi trimisă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось отправить заявку"
+          }
+        }
+      }
+    },
+    "Couldn't update your upvote." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Susținerea nu a putut fi actualizată."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Не удалось обновить ваш голос."
+          }
+        }
+      }
+    },
+    "Create Account" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Creați un cont"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Создать аккаунт"
+          }
+        }
+      }
+    },
+    "Current password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola actuală"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Текущий пароль"
+          }
+        }
+      }
+    },
+    "Current Password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola actuală"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Текущий пароль"
+          }
+        }
+      }
+    },
+    "Damaged Sidewalk" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trotuar deteriorat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Повреждённый тротуар"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergeți"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить"
+          }
+        }
+      }
+    },
+    "Delete Account" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergere cont"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удаление аккаунта"
+          }
+        }
+      }
+    },
+    "Delete Account and All Reports" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergeți contul și toate sesizările"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить аккаунт и все заявки"
+          }
+        }
+      }
+    },
+    "Delete My Account" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergeți-mi contul"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить мой аккаунт"
+          }
+        }
+      }
+    },
+    "Delete Report?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergeți sesizarea?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить заявку?"
+          }
+        }
+      }
+    },
+    "Delete your account?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergeți contul?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить аккаунт?"
+          }
+        }
+      }
+    },
+    "Deleting your account permanently removes your login, your profile and every report and photo you've submitted." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ștergerea contului elimină definitiv datele de autentificare, profilul și toate sesizările și fotografiile trimise de dvs."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "При удалении аккаунта безвозвратно удаляются ваши данные для входа, профиль, а также все отправленные вами заявки и фото."
+          }
+        }
+      }
+    },
+    "Description" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Descriere"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Описание"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Gata"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Готово"
+          }
+        }
+      }
+    },
+    "e.g. Repair crew booked for Monday" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "de ex. Echipa de reparații este programată pentru luni"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Например: ремонтная бригада назначена на понедельник"
+          }
+        }
+      }
+    },
+    "Edit Report" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Editare sesizare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Изменить заявку"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "E-mail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Электронная почта"
+          }
+        }
+      }
+    },
+    "Faded Road Markings" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Marcaj rutier șters"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Стёртая разметка"
+          }
+        }
+      }
+    },
+    "Fetching current location…" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Se obține locația curentă…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Определение текущей геопозиции…"
+          }
+        }
+      }
+    },
+    "Filter Reports" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Filtrați sesizările"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Фильтровать заявки"
+          }
+        }
+      }
+    },
+    "Finding address…" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Se caută adresa…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Поиск адреса…"
+          }
+        }
+      }
+    },
+    "Forgot Password?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ați uitat parola?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Забыли пароль?"
+          }
+        }
+      }
+    },
+    "Hide password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ascundeți parola"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Скрыть пароль"
+          }
+        }
+      }
+    },
+    "History" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Istoric"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "История"
+          }
+        }
+      }
+    },
+    "I'm staff" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fac parte din personal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Я сотрудник"
+          }
+        }
+      }
+    },
+    "If an account exists for %@, a reset link is on its way. Check your inbox and spam folder." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dacă există un cont pentru %@, veți primi în curând un link de resetare. Verificați mesajele primite și dosarul de spam."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Если для адреса %@ существует аккаунт, на него будет отправлена ссылка для сброса пароля. Проверьте входящие и папку «Спам»."
+          }
+        }
+      }
+    },
+    "If one of these is the same issue, upvote it instead of filing a new report. Upvotes help staff see which issues matter most." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dacă una dintre aceste sesizări descrie aceeași problemă, susțineți-o în loc să trimiteți una nouă. Susținerile ajută personalul să vadă care probleme sunt cele mai importante."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Если одна из этих заявок описывает ту же проблему, поддержите её вместо подачи новой. Голоса помогают сотрудникам понять, какие проблемы важнее всего."
+          }
+        }
+      }
+    },
+    "In Progress" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "În lucru"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "В работе"
+          }
+        }
+      }
+    },
+    "Incorrect email or password." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adresa de e-mail sau parola este incorectă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Неверный адрес электронной почты или пароль."
+          }
+        }
+      }
+    },
+    "Issue" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Problemă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Проблема"
+          }
+        }
+      }
+    },
+    "Issues you report from the map will show up here." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Problemele pe care le semnalați de pe hartă vor apărea aici."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Здесь появятся проблемы, о которых вы сообщите с карты."
+          }
+        }
+      }
+    },
+    "It will be removed from the map for everyone." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizarea va fi eliminată de pe hartă pentru toți utilizatorii."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Заявка будет удалена с карты для всех пользователей."
+          }
+        }
+      }
+    },
+    "Loading..." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Se încarcă…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Загрузка…"
+          }
+        }
+      }
+    },
+    "Location" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Locație"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Местоположение"
+          }
+        }
+      }
+    },
+    "Location Access" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Acces la locație"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Доступ к геопозиции"
+          }
+        }
+      }
+    },
+    "Location access is turned off. You can still tap the map to pin the issue." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Accesul la locație este dezactivat. Puteți totuși atinge harta pentru a marca problema."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Доступ к геопозиции выключен. Вы можете отметить проблему, коснувшись карты."
+          }
+        }
+      }
+    },
+    "Map" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Hartă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Карта"
+          }
+        }
+      }
+    },
+    "Most Upvoted" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cele mai susținute"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Больше всего голосов"
+          }
+        }
+      }
+    },
+    "My Reports" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizările mele"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Мои заявки"
+          }
+        }
+      }
+    },
+    "Network error. Check your connection and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Eroare de rețea. Verificați conexiunea și încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ошибка сети. Проверьте подключение и повторите попытку."
+          }
+        }
+      }
+    },
+    "New password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola nouă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Новый пароль"
+          }
+        }
+      }
+    },
+    "New Password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola nouă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Новый пароль"
+          }
+        }
+      }
+    },
+    "New Report" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizare nouă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Новая заявка"
+          }
+        }
+      }
+    },
+    "New to RoadFix?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nu aveți cont RoadFix?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ещё нет аккаунта RoadFix?"
+          }
+        }
+      }
+    },
+    "Newest First" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cele mai noi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сначала новые"
+          }
+        }
+      }
+    },
+    "No Reports Yet" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nicio sesizare încă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Заявок пока нет"
+          }
+        }
+      }
+    },
+    "Not Asked Yet" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nesolicitat încă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ещё не запрошен"
+          }
+        }
+      }
+    },
+    "Note for Citizens" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Notă pentru cetățeni"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Примечание для жителей"
+          }
+        }
+      }
+    },
+    "Note from Staff" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Notă de la personal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Примечание от сотрудников"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Dezactivat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Выключен"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "ОК"
+          }
+        }
+      }
+    },
+    "Oldest First" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Cele mai vechi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сначала старые"
+          }
+        }
+      }
+    },
+    "Open iOS Settings" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deschideți aplicația Configurări"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Открыть Настройки iOS"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deschideți Configurări"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Открыть Настройки"
+          }
+        }
+      }
+    },
+    "Options" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Opțiuni"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Параметры"
+          }
+        }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Altele"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Другое"
+          }
+        }
+      }
+    },
+    "Password Changed" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola a fost schimbată"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Пароль изменён"
+          }
+        }
+      }
+    },
+    "Password must be at least 6 characters." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola trebuie să aibă cel puțin 6 caractere."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Пароль должен содержать не менее 6 символов."
+          }
+        }
+      }
+    },
+    "Photo" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Fotografie"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Фото"
+          }
+        }
+      }
+    },
+    "Please try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Повторите попытку."
+          }
+        }
+      }
+    },
+    "Pothole" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Groapă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Яма"
+          }
+        }
+      }
+    },
+    "Privacy" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Confidențialitate"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Конфиденциальность"
+          }
+        }
+      }
+    },
+    "Remove Photo" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Eliminați fotografia"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Удалить фото"
+          }
+        }
+      }
+    },
+    "Report Detail" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Detalii sesizare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сведения о заявке"
+          }
+        }
+      }
+    },
+    "Report Unavailable" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizare indisponibilă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Заявка недоступна"
+          }
+        }
+      }
+    },
+    "Reported" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trimisă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Подана"
+          }
+        }
+      }
+    },
+    "Reset Filters" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Resetați filtrele"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сбросить фильтры"
+          }
+        }
+      }
+    },
+    "Reset Password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Resetare parolă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сброс пароля"
+          }
+        }
+      }
+    },
+    "Resolved" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rezolvată"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Решена"
+          }
+        }
+      }
+    },
+    "Restricted" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Restricționat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ограничен"
+          }
+        }
+      }
+    },
+    "RoadFix" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix"
+          }
+        }
+      }
+    },
+    "RoadFix only uses your location while the app is open, to pin new reports and show where you are on the map." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix folosește locația dvs. doar cât aplicația este deschisă, pentru a marca sesizările noi și a vă arăta poziția pe hartă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "RoadFix использует вашу геопозицию, только когда приложение открыто: чтобы отмечать новые заявки и показывать, где вы находитесь на карте."
+          }
+        }
+      }
+    },
+    "Role" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rol"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Роль"
+          }
+        }
+      }
+    },
+    "Role: Citizen" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rol: Cetățean"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Роль: Житель"
+          }
+        }
+      }
+    },
+    "Role: Staff" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Rol: Personal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Роль: Сотрудник"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvați"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сохранить"
+          }
+        }
+      }
+    },
+    "Save Note" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Salvați nota"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сохранить примечание"
+          }
+        }
+      }
+    },
+    "Search description or address" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Căutați după descriere sau adresă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Поиск по описанию или адресу"
+          }
+        }
+      }
+    },
+    "Send Again" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trimiteți din nou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отправить ещё раз"
+          }
+        }
+      }
+    },
+    "Send Reset Link" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trimiteți linkul de resetare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отправить ссылку для сброса"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Configurări"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Настройки"
+          }
+        }
+      }
+    },
+    "Show My Location" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Afișați locația mea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Показать мою геопозицию"
+          }
+        }
+      }
+    },
+    "Show password" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Afișați parola"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Показать пароль"
+          }
+        }
+      }
+    },
+    "Sign Out" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Deconectați-vă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Выйти"
+          }
+        }
+      }
+    },
+    "Something Went Wrong" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "A apărut o eroare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Произошла ошибка"
+          }
+        }
+      }
+    },
+    "Something went wrong, try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "A apărut o eroare. Încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Произошла ошибка. Повторите попытку."
+          }
+        }
+      }
+    },
+    "Sort" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sortare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сортировка"
+          }
+        }
+      }
+    },
+    "Sort and Filter" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sortare și filtrare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сортировка и фильтрация"
+          }
+        }
+      }
+    },
+    "Staff" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Personal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сотрудники"
+          }
+        }
+      }
+    },
+    "Staff Dashboard" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Panoul personalului"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Панель сотрудников"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Stare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Статус"
+          }
+        }
+      }
+    },
+    "Submit" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Trimiteți"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отправить"
+          }
+        }
+      }
+    },
+    "Submitting…" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Se trimite…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отправка…"
+          }
+        }
+      }
+    },
+    "Take Photo" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Faceți o fotografie"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Сделать фото"
+          }
+        }
+      }
+    },
+    "Tap the map to move the pin to where the issue is." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Atingeți harta pentru a muta reperul acolo unde se află problema."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Коснитесь карты, чтобы переместить метку туда, где находится проблема."
+          }
+        }
+      }
+    },
+    "That email address doesn't look right." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Adresa de e-mail nu pare să fie corectă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Похоже, адрес электронной почты указан неверно."
+          }
+        }
+      }
+    },
+    "The new password must be at least 6 characters." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola nouă trebuie să aibă cel puțin 6 caractere."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Новый пароль должен содержать не менее 6 символов."
+          }
+        }
+      }
+    },
+    "The new passwords don't match." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parolele noi nu coincid."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Новые пароли не совпадают."
+          }
+        }
+      }
+    },
+    "This can't be undone." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Această acțiune este ireversibilă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Это действие нельзя отменить."
+          }
+        }
+      }
+    },
+    "This permanently removes the report and its photo for everyone." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizarea și fotografia ei vor fi eliminate definitiv pentru toți utilizatorii."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Заявка и её фото будут безвозвратно удалены для всех пользователей."
+          }
+        }
+      }
+    },
+    "Too many attempts. Wait a few minutes and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Prea multe încercări. Așteptați câteva minute și încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Слишком много попыток. Подождите несколько минут и повторите попытку."
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Necunoscut"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Неизвестен"
+          }
+        }
+      }
+    },
+    "Updated" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Actualizată"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Обновлена"
+          }
+        }
+      }
+    },
+    "Upvote (%lld)" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Susțineți (%lld)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Поддержать (%lld)"
+          }
+        }
+      }
+    },
+    "Upvoted (%lld)" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Susținută (%lld)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Поддержано (%lld)"
+          }
+        }
+      }
+    },
+    "Use My Current Location" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Folosiți locația mea curentă"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Использовать текущую геопозицию"
+          }
+        }
+      }
+    },
+    "Use your new password the next time you log in." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Folosiți parola nouă la următoarea autentificare."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "При следующем входе используйте новый пароль."
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Versiune"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Версия"
+          }
+        }
+      }
+    },
+    "We'll email you a link to choose a new password." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Vă vom trimite prin e-mail un link pentru a alege o parolă nouă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Мы отправим вам по электронной почте ссылку для создания нового пароля."
+          }
+        }
+      }
+    },
+    "What's the issue?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Care este problema?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "В чём проблема?"
+          }
+        }
+      }
+    },
+    "While Using the App" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "În timpul utilizării aplicației"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "При использовании приложения"
+          }
+        }
+      }
+    },
+    "Withdraw Report" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Retrageți sesizarea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отозвать заявку"
+          }
+        }
+      }
+    },
+    "Withdraw this report?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Retrageți această sesizare?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Отозвать эту заявку?"
+          }
+        }
+      }
+    },
+    "You don't have permission to do that." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Nu aveți permisiunea de a efectua această acțiune."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "У вас нет прав на это действие."
+          }
+        }
+      }
+    },
+    "You're signed out. Sign in and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "V-ați deconectat. Autentificați-vă și încercați din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Вы вышли из аккаунта. Войдите и повторите попытку."
+          }
+        }
+      }
+    },
+    "Your current password is incorrect." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Parola actuală este incorectă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Неверный текущий пароль."
+          }
+        }
+      }
+    },
+    "Your reports and photos will be removed for everyone." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Sesizările și fotografiile dvs. vor fi eliminate pentru toți utilizatorii."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Ваши заявки и фото будут удалены для всех пользователей."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.3"
+}

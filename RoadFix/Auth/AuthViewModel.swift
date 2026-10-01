@@ -63,7 +63,7 @@ final class AuthViewModel: ObservableObject {
                 guard let self else { return }
                 defer { self.isLoading = false }
                 guard let email, let role else {
-                    self.errorMessage = "Could not load your account profile."
+                    self.errorMessage = String(localized: "Could not load your account profile.")
                     self.currentUser = nil
                     if !self.isCreatingAccount { self.isSubmitting = false }
                     return
@@ -102,7 +102,7 @@ final class AuthViewModel: ObservableObject {
                     return
                 }
                 guard let firebaseUser else {
-                    self.errorMessage = "Something went wrong, try again."
+                    self.errorMessage = String(localized: "Something went wrong, try again.")
                     self.finishSubmitting()
                     return
                 }
@@ -143,7 +143,7 @@ final class AuthViewModel: ObservableObject {
                 if failed {
                     // This is a Firestore error, not an Auth error — mapAuthError
                     // only understands AuthErrorCode, so don't route it there.
-                    self.errorMessage = "Could not finish creating your account. Try again."
+                    self.errorMessage = String(localized: "Could not finish creating your account. Try again.")
                     createdUser.delete(completion: nil)
                     try? Auth.auth().signOut()
                     self.finishSubmitting()
@@ -168,7 +168,7 @@ final class AuthViewModel: ObservableObject {
             errorMessage = nil
             finishSubmitting()
         } catch {
-            errorMessage = "Could not sign out. Try again."
+            errorMessage = String(localized: "Could not sign out. Try again.")
         }
     }
 
@@ -183,14 +183,47 @@ final class AuthViewModel: ObservableObject {
         try await user.updatePassword(to: newPassword)
     }
 
+    // Firebase sends the email and hosts the reset page. It doesn't say
+    // whether an account exists for the address, so neither does the app.
+    func sendPasswordReset(email: String) async throws {
+        try await Auth.auth().sendPasswordReset(withEmail: email)
+    }
+
+    // Removes everything the user created — their reports, report photos and
+    // profile — then the Firebase account itself (App Store guideline 5.1.1(v)).
+    // Signing in again first is required by Firebase to delete an account.
+    func deleteAccount(password: String) async throws {
+        guard let user = Auth.auth().currentUser, let email = user.email else {
+            throw NSError(domain: AuthErrors.domain, code: AuthErrorCode.userNotFound.rawValue)
+        }
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        _ = try await user.reauthenticate(with: credential)
+
+        let reports = try await db.collection("reports")
+            .whereField("reporterId", isEqualTo: user.uid)
+            .getDocuments()
+        // A batch holds at most 500 writes; each report is 2 (report + photo).
+        for chunk in stride(from: 0, to: reports.documents.count, by: 200) {
+            let batch = db.batch()
+            for document in reports.documents[chunk..<min(chunk + 200, reports.documents.count)] {
+                batch.deleteDocument(document.reference)
+                batch.deleteDocument(db.collection("reportPhotos").document(document.documentID))
+            }
+            try await batch.commit()
+        }
+        try await db.collection("users").document(user.uid).delete()
+        try await user.delete()
+        // The auth listener sees the signed-out state and shows LoginView.
+    }
+
     nonisolated static func changePasswordErrorMessage(_ error: Error) -> String {
         switch AuthErrorCode(rawValue: (error as NSError).code) {
         case .wrongPassword, .invalidCredential:
-            return "Your current password is incorrect."
+            return String(localized: "Your current password is incorrect.")
         case .userNotFound, .userMismatch:
-            return "You're signed out. Sign in and try again."
+            return String(localized: "You're signed out. Sign in and try again.")
         case .tooManyRequests:
-            return "Too many attempts. Wait a few minutes and try again."
+            return String(localized: "Too many attempts. Wait a few minutes and try again.")
         default:
             return mapAuthError(error)
         }
@@ -200,24 +233,24 @@ final class AuthViewModel: ObservableObject {
     private nonisolated static func mapAuthError(_ error: Error) -> String {
         let nsError = error as NSError
         guard let code = AuthErrorCode(rawValue: nsError.code) else {
-            return "Something went wrong, try again."
+            return String(localized: "Something went wrong, try again.")
         }
         switch code {
         case .wrongPassword, .invalidCredential, .userNotFound:
             // Deliberately the same message for "wrong password" and "no
             // such account" — distinguishing them lets an attacker enumerate
             // which emails have accounts.
-            return "Incorrect email or password."
+            return String(localized: "Incorrect email or password.")
         case .emailAlreadyInUse:
-            return "An account with that email already exists."
+            return String(localized: "An account with that email already exists.")
         case .invalidEmail:
-            return "That email address doesn't look right."
+            return String(localized: "That email address doesn't look right.")
         case .weakPassword:
-            return "Password must be at least 6 characters."
+            return String(localized: "Password must be at least 6 characters.")
         case .networkError:
-            return "Network error. Check your connection and try again."
+            return String(localized: "Network error. Check your connection and try again.")
         default:
-            return "Something went wrong, try again."
+            return String(localized: "Something went wrong, try again.")
         }
     }
 }

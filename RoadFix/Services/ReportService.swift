@@ -8,6 +8,12 @@ import FirebaseFirestore
 
 class ReportService: ObservableObject {
     @Published var reports: [Report] = []
+    // Set when a write fails; ContentView shows it and clears it.
+    @Published var actionError: String?
+    // The status each of the user's reports had when they last opened it,
+    // kept on the device. A different current status means staff changed
+    // it since, which My Reports shows as "Updated".
+    @Published private var seenStatuses: [String: String] = [:]
 
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
@@ -27,6 +33,7 @@ class ReportService: ObservableObject {
     // as soon as anyone submits, upvotes or changes a status.
     func startListening() {
         guard listener == nil else { return }
+        loadSeenStatuses()
         listener = reportsCollection.addSnapshotListener { [weak self] snapshot, error in
             guard let self, let documents = snapshot?.documents else {
                 if let error { print("Reports listener error: \(error.localizedDescription)") }
@@ -41,6 +48,29 @@ class ReportService: ObservableObject {
     func stopListening() {
         listener?.remove()
         listener = nil
+    }
+
+    // MARK: Status updates seen by the reporter
+
+    private var seenStatusesKey: String? {
+        Auth.auth().currentUser.map { "seenStatuses.\($0.uid)" }
+    }
+
+    private func loadSeenStatuses() {
+        guard let key = seenStatusesKey else { return }
+        seenStatuses = UserDefaults.standard.dictionary(forKey: key) as? [String: String] ?? [:]
+    }
+
+    /// True when staff changed the status since the reporter last opened it.
+    /// Every report starts as "reported", so that's the default.
+    func hasUnseenUpdate(_ report: Report) -> Bool {
+        report.status.rawValue != (seenStatuses[report.id] ?? ReportStatus.reported.rawValue)
+    }
+
+    func markSeen(_ report: Report) {
+        guard let key = seenStatusesKey, hasUnseenUpdate(report) else { return }
+        seenStatuses[report.id] = report.status.rawValue
+        UserDefaults.standard.set(seenStatuses, forKey: key)
     }
 
     func submitReport(
@@ -130,33 +160,74 @@ class ReportService: ObservableObject {
         let change = report.isUpvoted(by: uid)
             ? FieldValue.arrayRemove([uid])
             : FieldValue.arrayUnion([uid])
-        reportsCollection.document(report.id).updateData(["upvoterIds": change])
+        reportsCollection.document(report.id).updateData(["upvoterIds": change], completion: failureHandler(String(localized: "Couldn't update your upvote.")))
     }
 
-    // firestore.rules only lets staff change a report's status.
+    // firestore.rules only lets staff change a report's status. Each change
+    // is also appended to statusHistory so everyone can see when it happened.
+    // (Firestore can't put serverTimestamp() inside an array, hence the
+    // device time.)
     func updateStatus(_ report: Report, to status: ReportStatus) {
-        reportsCollection.document(report.id).updateData(["status": status.rawValue])
+        guard status != report.status else { return }
+        let entry: [String: Any] = ["status": status.rawValue, "date": Timestamp(date: Date())]
+        reportsCollection.document(report.id).updateData([
+            "status": status.rawValue,
+            "statusHistory": FieldValue.arrayUnion([entry])
+        ], completion: failureHandler(String(localized: "Couldn't change the status.")))
     }
 
-    // firestore.rules only lets staff delete. The report and its photo doc
-    // go in one batch so a photo is never left behind without its report.
+    // A note from staff that everyone can read, e.g. "Crew booked for Monday".
+    // An empty note removes it.
+    func updateStaffNote(_ report: Report, to note: String) {
+        let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
+        let value: Any = trimmed.isEmpty ? FieldValue.delete() : trimmed
+        reportsCollection.document(report.id).updateData(["staffNote": value], completion: failureHandler(String(localized: "Couldn't save the note.")))
+    }
+
+    // The reporter may fix their own report while it's still "reported".
+    func updateReport(_ report: Report, category: ReportCategory, description: String) {
+        reportsCollection.document(report.id).updateData([
+            "category": category.rawValue,
+            "description": description
+        ], completion: failureHandler(String(localized: "Couldn't save your changes.")))
+    }
+
+    // Staff can delete any report; reporters can withdraw their own. The
+    // report and its photo doc go in one batch so a photo is never left
+    // behind without its report.
     func deleteReport(_ report: Report) {
         let batch = db.batch()
         batch.deleteDocument(reportsCollection.document(report.id))
         batch.deleteDocument(photosCollection.document(report.id))
+        let onFailure = failureHandler(String(localized: "Couldn't delete the report."))
         batch.commit { [weak self] error in
-            if let error {
-                print("Delete report error: \(error.localizedDescription)")
-            } else {
+            if error == nil {
                 self?.photoCache.removeObject(forKey: report.id as NSString)
             }
+            onFailure(error)
+        }
+    }
+
+    // Shows actionError (ContentView presents it as an alert) when a write
+    // is rejected, instead of failing silently.
+    private func failureHandler(_ message: String) -> (Error?) -> Void {
+        { [weak self] error in
+            guard let error else { return }
+            print("\(message) \(error.localizedDescription)")
+            let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
+            let reason = switch code {
+            case .permissionDenied: String(localized: "You don't have permission to do that.")
+            case .unavailable, .deadlineExceeded: String(localized: "Check your connection and try again.")
+            default: String(localized: "Please try again.")
+            }
+            self?.actionError = "\(message) \(reason)"
         }
     }
 
     // Firestore docs max out at 1 MiB, so shrink to 1280px on the long side
     // and lower JPEG quality until the photo fits under maxPhotoBytes
     // (the same limit firestore.rules enforces).
-    private static func compressedJPEG(_ image: UIImage) -> Data? {
+    static func compressedJPEG(_ image: UIImage) -> Data? {
         let maxSide: CGFloat = 1280
         let longest = max(image.size.width, image.size.height)
         let scale = min(1, maxSide / longest)
@@ -174,7 +245,7 @@ class ReportService: ObservableObject {
         return nil
     }
 
-    private static func report(id: String, data: [String: Any]) -> Report? {
+    static func report(id: String, data: [String: Any]) -> Report? {
         guard let categoryRaw = data["category"] as? String,
               let category = ReportCategory(rawValue: categoryRaw),
               let description = data["description"] as? String,
@@ -196,7 +267,14 @@ class ReportService: ObservableObject {
             status: status,
             upvoterIds: data["upvoterIds"] as? [String] ?? [],
             reporterId: reporterId,
-            createdAt: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
+            createdAt: (data["createdAt"] as? Timestamp)?.dateValue() ?? Date(),
+            staffNote: data["staffNote"] as? String,
+            statusHistory: (data["statusHistory"] as? [[String: Any]] ?? []).compactMap { entry in
+                guard let raw = entry["status"] as? String,
+                      let status = ReportStatus(rawValue: raw),
+                      let date = (entry["date"] as? Timestamp)?.dateValue() else { return nil }
+                return StatusChange(status: status, date: date)
+            }
         )
     }
 }
