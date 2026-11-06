@@ -172,6 +172,11 @@ private struct StaffNoteEditor: View {
             TextField("e.g. Repair crew booked for Monday", text: $note, axis: .vertical)
                 .lineLimit(2...5)
                 .textFieldStyle(.roundedBorder)
+                .onChange(of: note) { _, newValue in
+                    if newValue.count > ReportService.maxStaffNoteLength {
+                        note = String(newValue.prefix(ReportService.maxStaffNoteLength))
+                    }
+                }
             Button("Save Note") {
                 reportService.updateStaffNote(report, to: note)
             }
@@ -215,6 +220,11 @@ private struct EditReportView: View {
                 Section("Description") {
                     TextField("What's the issue?", text: $description, axis: .vertical)
                         .lineLimit(3...6)
+                        .onChange(of: description) { _, newValue in
+                            if newValue.count > ReportService.maxDescriptionLength {
+                                description = String(newValue.prefix(ReportService.maxDescriptionLength))
+                            }
+                        }
                 }
             }
             .navigationTitle("Edit Report")

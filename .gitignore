@@ -11,3 +11,7 @@ RoadFix/GoogleService-Info.plist
 
 # Web simulator
 web-sim/node_modules/
+
+# Secrets: never commit environment files
+.env
+.env.*

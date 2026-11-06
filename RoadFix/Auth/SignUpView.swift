@@ -12,12 +12,29 @@ struct SignUpView: View {
     @State private var confirmPassword = ""
     @State private var isStaff = false
     @State private var staffCode = ""
+    @State private var isOldEnough = false
+    @State private var acceptsTerms = false
+    @State private var legalDocument: LegalDocument?
     @FocusState private var focus: AuthFocus?
+
+    private var passwordProblem: String? {
+        PasswordPolicy.problem(with: password, email: email)
+    }
+
+    // Shown once something is typed, so an empty form isn't covered in errors.
+    private var passwordHint: String? {
+        if !password.isEmpty, let passwordProblem { return passwordProblem }
+        if !confirmPassword.isEmpty && password != confirmPassword {
+            return String(localized: "The passwords don't match.")
+        }
+        return nil
+    }
 
     private var canSubmit: Bool {
         email.contains("@") && email.contains(".") &&
-        password.count >= 6 &&
-        password == confirmPassword
+        passwordProblem == nil &&
+        password == confirmPassword &&
+        isOldEnough && acceptsTerms
     }
 
     var body: some View {
@@ -43,7 +60,7 @@ struct SignUpView: View {
 
                 AuthField(
                     systemImage: "lock",
-                    placeholder: "Password (min 6 characters)",
+                    placeholder: "Password (min 12 characters)",
                     text: $password,
                     isSecure: true,
                     contentType: .newPassword,
@@ -87,6 +104,28 @@ struct SignUpView: View {
             .tint(.primary)
             .padding(.horizontal, 4)
 
+            if let passwordHint {
+                Text(passwordHint)
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 4)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Toggle("I'm 16 or older", isOn: $isOldEnough)
+                Toggle(isOn: $acceptsTerms) {
+                    Text("I agree to the Terms of Use and the Privacy Policy")
+                }
+                HStack(spacing: 16) {
+                    Button("Terms of Use") { legalDocument = .terms }
+                    Button("Privacy Policy") { legalDocument = .privacy }
+                }
+                .font(.footnote.weight(.semibold))
+            }
+            .toggleStyle(CheckboxToggleStyle())
+            .padding(.horizontal, 4)
+
             AuthErrorText(message: authViewModel.errorMessage)
 
             AuthPrimaryButton(
@@ -99,6 +138,16 @@ struct SignUpView: View {
             Spacer(minLength: 0)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $legalDocument) { document in
+            NavigationStack {
+                LegalDocumentView(document: document)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { legalDocument = nil }
+                        }
+                    }
+            }
+        }
     }
 
     private func submit() {

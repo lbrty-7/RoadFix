@@ -10,26 +10,39 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
     }
 
+    // Set by Firebase once the user opens the link in the verification email.
+    function isVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isShortText(value, maxLength) {
+      return value is string && value.size() > 0 && value.size() <= maxLength;
+    }
+
     // A new profile may be "citizen", or "staff" only if it carries the
     // correct invite code. The check happens here, server-side, so calling
     // Firestore directly can't skip it. get() fails if the config doc is
     // missing, which denies staff sign-up rather than allowing it.
     function isValidNewProfile() {
       let data = request.resource.data;
-      return data.keys().hasOnly(['email', 'role', 'createdAt', 'staffCode'])
+      return data.keys().hasOnly(['email', 'role', 'createdAt', 'staffCode', 'termsAcceptedAt'])
+          && data.email == request.auth.token.email
           && (data.role == "citizen"
               || (data.role == "staff"
                   && data.get('staffCode', '') == get(/databases/$(database)/documents/config/staffInviteCode).data.code));
     }
 
-    // Each user can read/create their own profile doc, and can update it
-    // as long as they don't change their own role after creation. They can
-    // delete it as part of deleting their account (DeleteAccountView).
+    // Each user can read/create their own profile doc. The only later change
+    // is lastReportAt, stamped with the server time in the same batch as each
+    // new report (see the one-per-minute limit below), so nobody can change
+    // their own role. They can delete it as part of deleting their account
+    // (DeleteAccountView).
     match /users/{userId} {
       allow read: if isSignedIn() && request.auth.uid == userId;
       allow create: if isSignedIn() && request.auth.uid == userId && isValidNewProfile();
       allow update: if isSignedIn() && request.auth.uid == userId
-                    && request.resource.data.role == resource.data.role;
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastReportAt'])
+                    && request.resource.data.lastReportAt == request.time;
       allow delete: if isSignedIn() && request.auth.uid == userId;
     }
 
@@ -42,7 +55,27 @@ service cloud.firestore {
     // Written by ReportService.swift. Field names and the status values
     // ("reported", "inProgress", "resolved") match Report.swift.
     match /reports/{reportId} {
-      allow read: if isSignedIn();
+      // Lists are capped (ReportService.listLimit) so the whole collection
+      // can't be scraped in one request. A user's own reports can always be
+      // listed in full, which deleting an account needs.
+      allow get: if isSignedIn();
+      allow list: if isSignedIn()
+                  && (request.query.limit <= 500 || resource.data.reporterId == request.auth.uid);
+
+      // At most one new report per account per minute. lastReportAt is the
+      // time of the user's previous report; the batch must stamp it again.
+      function isNotTooSoon() {
+        let before = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+        let after = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+        return after.get('lastReportAt', null) == request.time
+            && (before.get('lastReportAt', null) == null
+                || request.time > before.lastReportAt + duration.value(1, 'm'));
+      }
+
+      function isValidReport(data) {
+        return data.category in ['pothole', 'streetlight', 'sidewalk', 'markings', 'other']
+            && isShortText(data.description, 2000);
+      }
 
       // The only change a non-owner may make: adding or removing their own
       // uid in upvoterIds, so each user can upvote a report at most once.
@@ -58,23 +91,45 @@ service cloud.firestore {
       // (e.g. "resolved") or fake upvotes at creation time. Without this, the
       // create path defeats the whole point of the update rule below.
       // Staff-only fields (staffNote, statusHistory) can't be set either.
+      // The email must be verified, every field is type- and size-checked,
+      // and isNotTooSoon() limits each account to one report per minute.
       allow create: if isSignedIn()
+                    && isVerified()
+                    && isNotTooSoon()
+                    && request.resource.data.keys().hasOnly(['category', 'description', 'latitude', 'longitude',
+                         'status', 'upvoterIds', 'reporterId', 'hasPhoto', 'createdAt', 'address'])
+                    && isValidReport(request.resource.data)
+                    && request.resource.data.latitude is number
+                    && request.resource.data.latitude >= -90 && request.resource.data.latitude <= 90
+                    && request.resource.data.longitude is number
+                    && request.resource.data.longitude >= -180 && request.resource.data.longitude <= 180
+                    && request.resource.data.hasPhoto is bool
+                    && request.resource.data.createdAt == request.time
+                    && (!('address' in request.resource.data) || isShortText(request.resource.data.address, 300))
                     && request.resource.data.reporterId == request.auth.uid
                     && request.resource.data.status == "reported"
                     && request.resource.data.upvoterIds == []
                     && !request.resource.data.keys().hasAny(['staffNote', 'statusHistory']);
+      // (The hasOnly() list above already excludes staffNote and
+      // statusHistory; the check is kept so the intent stays obvious.)
 
-      // Staff can change anything: status, statusHistory and staffNote.
+      // Staff can change status, statusHistory and staffNote, as long as the
+      // status is a known one and the note isn't oversized.
       // The reporter may only fix the category and description of their own
       // report, and only while it's still "reported" (EditReportView).
       // Anyone signed in may toggle their own upvote.
       allow update: if isSignedIn() &&
                      (
-                       userRole() == "staff" ||
+                       (
+                         userRole() == "staff" &&
+                         request.resource.data.status in ['reported', 'inProgress', 'resolved'] &&
+                         (!('staffNote' in request.resource.data) || isShortText(request.resource.data.staffNote, 1000))
+                       ) ||
                        (
                          resource.data.reporterId == request.auth.uid &&
                          resource.data.status == "reported" &&
-                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['category', 'description'])
+                         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['category', 'description']) &&
+                         isValidReport(request.resource.data)
                        ) ||
                        isOwnUpvoteChange()
                      );

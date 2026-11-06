@@ -5,6 +5,7 @@ import MapKit
 
 struct NewReportView: View {
     @ObservedObject var reportService: ReportService
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var locationManager = LocationManager()
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -18,6 +19,8 @@ struct NewReportView: View {
     @State private var showCamera = false
     @State private var isSubmitting = false
     @State private var submitError: String?
+    @State private var verificationMessage: String?
+    @State private var isCheckingVerification = false
     // Where the report will be filed. Starts at the user's location and
     // follows it until they tap the map to choose a spot themselves.
     @State private var pinnedLocation: CLLocationCoordinate2D?
@@ -48,6 +51,10 @@ struct NewReportView: View {
     var body: some View {
         NavigationStack {
             Form {
+                if !authViewModel.isEmailVerified {
+                    verifyEmailSection
+                }
+
                 Section("Photo") {
                     Button {
                         showPhotoSourceDialog = true
@@ -98,6 +105,11 @@ struct NewReportView: View {
                 Section("Description") {
                     TextField("What's the issue?", text: $description, axis: .vertical)
                         .lineLimit(3...6)
+                        .onChange(of: description) { _, newValue in
+                            if newValue.count > ReportService.maxDescriptionLength {
+                                description = String(newValue.prefix(ReportService.maxDescriptionLength))
+                            }
+                        }
                 }
 
                 Section {
@@ -195,7 +207,8 @@ struct NewReportView: View {
                     Button(isSubmitting ? "Submitting…" : "Submit") {
                         submit()
                     }
-                    .disabled(description.isEmpty || pinnedLocation == nil || isSubmitting)
+                    .disabled(description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                              || pinnedLocation == nil || isSubmitting || !authViewModel.isEmailVerified)
                 }
             }
             .onAppear {
@@ -245,13 +258,55 @@ struct NewReportView: View {
             image: selectedImage,
             coordinate: coordinate,
             address: pinAddress
-        ) { success in
+        ) { errorMessage in
             isSubmitting = false
-            if success {
-                dismiss()
+            if let errorMessage {
+                submitError = errorMessage
             } else {
-                submitError = String(localized: "Check your connection and try again.")
+                dismiss()
             }
+        }
+    }
+
+    // New reports are only accepted from verified email addresses
+    // (firestore.rules), which keeps throwaway accounts from spamming.
+    private var verifyEmailSection: some View {
+        Section {
+            Text("Open the link we sent to \(authViewModel.currentUser?.email ?? "") to confirm your email. Then you can send reports.")
+            Button {
+                isCheckingVerification = true
+                Task {
+                    await authViewModel.refreshEmailVerification()
+                    if !authViewModel.isEmailVerified {
+                        verificationMessage = String(localized: "Your email isn't confirmed yet. Check your inbox and spam folder.")
+                    }
+                    isCheckingVerification = false
+                }
+            } label: {
+                if isCheckingVerification {
+                    ProgressView()
+                } else {
+                    Text("I've Confirmed My Email")
+                }
+            }
+            .disabled(isCheckingVerification)
+            Button("Send the Email Again") {
+                Task {
+                    do {
+                        try await authViewModel.resendVerificationEmail()
+                        verificationMessage = String(localized: "Email sent. It can take a few minutes to arrive.")
+                    } catch {
+                        verificationMessage = String(localized: "Couldn't send the email. Wait a few minutes and try again.")
+                    }
+                }
+            }
+            if let verificationMessage {
+                Text(verificationMessage)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
+            Text("Confirm Your Email")
         }
     }
 }

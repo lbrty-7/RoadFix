@@ -65,6 +65,7 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingNewReport) {
             NewReportView(reportService: reportService)
+                .environmentObject(authViewModel)
         }
         .reportActionErrorAlert(reportService)
         .onAppear {
@@ -89,7 +90,8 @@ struct ContentView: View {
                 .font(.title2)
                 .foregroundStyle(.primary)
                 .frame(width: 44, height: 44)
-                .glassEffect(.regular.interactive(), in: .circle)
+                .background(Color(.systemBackground), in: .circle)
+                .overlay(Circle().strokeBorder(Color(.separator)))
         }
         .tint(.primary)
         .accessibilityLabel("Account")

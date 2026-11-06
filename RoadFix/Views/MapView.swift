@@ -69,7 +69,6 @@ struct MapView: View {
                         .frame(width: 56, height: 56)
                         .background(Color.accentColor)
                         .clipShape(Circle())
-                        .shadow(radius: 4)
                 }
                 .accessibilityLabel("New Report")
             }
@@ -112,7 +111,8 @@ struct MapView: View {
             .font(.title3)
             .foregroundStyle(.primary)
             .frame(width: 44, height: 44)
-            .glassEffect(.regular.interactive(), in: .circle)
+.background(Color(.systemBackground), in: .circle)
+            .overlay(Circle().strokeBorder(Color(.separator)))
     }
 
     private func binding<Value: Hashable>(for value: Value, in set: Binding<Set<Value>>) -> Binding<Bool> {

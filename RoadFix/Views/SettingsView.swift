@@ -28,6 +28,7 @@ struct SettingsView: View {
             Section("Account") {
                 LabeledContent("Email", value: authViewModel.currentUser?.email ?? "")
                 LabeledContent("Role", value: authViewModel.currentUser?.isStaff == true ? "Staff" : "Citizen")
+                LabeledContent("Email Verified", value: authViewModel.isEmailVerified ? String(localized: "Yes") : String(localized: "No"))
                 NavigationLink("Change Password") {
                     ChangePasswordView()
                 }
@@ -47,6 +48,12 @@ struct SettingsView: View {
             }
 
             Section("About") {
+                NavigationLink("Privacy Policy") {
+                    LegalDocumentView(document: .privacy)
+                }
+                NavigationLink("Terms of Use") {
+                    LegalDocumentView(document: .terms)
+                }
                 LabeledContent("Version", value: appVersion)
             }
 

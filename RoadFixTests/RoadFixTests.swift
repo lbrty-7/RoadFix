@@ -199,3 +199,27 @@ struct DashboardTests {
         #expect(!report.matches(search: "streetlight"))
     }
 }
+
+@Suite("Password and email rules")
+struct PasswordPolicyTests {
+    @Test func rejectsShortPasswords() {
+        #expect(!PasswordPolicy.isAcceptable("short1"))
+        #expect(!PasswordPolicy.isAcceptable("elevenchars"))
+        #expect(PasswordPolicy.isAcceptable("bright-river-42"))
+    }
+
+    @Test func rejectsCommonPasswords() {
+        #expect(!PasswordPolicy.isAcceptable("Password1234"))
+        #expect(!PasswordPolicy.isAcceptable("123456789012"))
+        #expect(!PasswordPolicy.isAcceptable("abababababab"))
+    }
+
+    @Test func rejectsPasswordContainingEmail() {
+        #expect(!PasswordPolicy.isAcceptable("ion.popescu2026", email: "Ion.Popescu@mail.md"))
+        #expect(PasswordPolicy.isAcceptable("quiet-harbor-77", email: "ion.popescu@mail.md"))
+    }
+
+    @Test func normalizesEmail() {
+        #expect(PasswordPolicy.normalizedEmail("  Ana@Mail.COM \n") == "ana@mail.com")
+    }
+}

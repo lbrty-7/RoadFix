@@ -20,6 +20,15 @@ class ReportService: ObservableObject {
     private let photoCache = NSCache<NSString, UIImage>()
     private var addressCache: [String: String] = [:]
     private static let maxPhotoBytes = 900 * 1024
+    // firestore.rules allows twice these lengths, because it counts
+    // characters differently from Swift (an emoji can count as several).
+    static let maxDescriptionLength = 1000
+    static let maxStaffNoteLength = 500
+    static let minSecondsBetweenReports: TimeInterval = 60
+    // The live listener loads at most this many (newest) reports, and
+    // firestore.rules refuses larger lists so nobody can dump the collection.
+    static let listLimit = 500
+    private var lastSubmittedAt: Date?
 
     private var reportsCollection: CollectionReference {
         db.collection("reports")
@@ -34,7 +43,10 @@ class ReportService: ObservableObject {
     func startListening() {
         guard listener == nil else { return }
         loadSeenStatuses()
-        listener = reportsCollection.addSnapshotListener { [weak self] snapshot, error in
+        listener = reportsCollection
+            .order(by: "createdAt", descending: true)
+            .limit(to: Self.listLimit)
+            .addSnapshotListener { [weak self] snapshot, error in
             guard let self, let documents = snapshot?.documents else {
                 if let error { print("Reports listener error: \(error.localizedDescription)") }
                 return
@@ -79,10 +91,16 @@ class ReportService: ObservableObject {
         image: UIImage?,
         coordinate: CLLocationCoordinate2D,
         address: String?,
-        completion: @escaping (Bool) -> Void
+        completion: @escaping (_ errorMessage: String?) -> Void
     ) {
         guard let uid = Auth.auth().currentUser?.uid else {
-            completion(false)
+            completion(String(localized: "You're signed out. Sign in and try again."))
+            return
+        }
+        // firestore.rules enforces the same wait; checking here first gives a
+        // clear message instead of a generic permission error.
+        if let lastSubmittedAt, Date().timeIntervalSince(lastSubmittedAt) < Self.minSecondsBetweenReports {
+            completion(String(localized: "You can send one report per minute. Wait a moment and try again."))
             return
         }
         let document = reportsCollection.document()
@@ -104,14 +122,25 @@ class ReportService: ObservableObject {
         // The photo lives in its own reportPhotos/{reportId} doc so the live
         // reports listener doesn't download every image. A batch writes both
         // or neither, and lets firestore.rules check the photo's report owner.
+        // lastReportAt on the user's profile is how firestore.rules limits
+        // each account to one report per minute.
         let batch = db.batch()
         batch.setData(data, forDocument: document)
+        batch.updateData(["lastReportAt": FieldValue.serverTimestamp()], forDocument: db.collection("users").document(uid))
         if let photoData {
             batch.setData(["data": photoData], forDocument: photosCollection.document(document.documentID))
         }
-        batch.commit { error in
-            if let error { print("Submit report error: \(error.localizedDescription)") }
-            completion(error == nil)
+        batch.commit { [weak self] error in
+            guard let error else {
+                self?.lastSubmittedAt = Date()
+                completion(nil)
+                return
+            }
+            print("Submit report error: \(error.localizedDescription)")
+            let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
+            completion(code == .permissionDenied
+                ? String(localized: "Your report was refused. Make sure your email is verified, and wait a minute between reports.")
+                : String(localized: "Check your connection and try again."))
         }
     }
 

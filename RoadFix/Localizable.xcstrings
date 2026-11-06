@@ -195,6 +195,22 @@
         }
       }
     },
+    "Accounts and reports are stored with Google Firebase (Firebase Authentication and Cloud Firestore). Maps and street addresses come from Apple Maps. These providers may process data outside Moldova and the EU under their own data protection terms." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conturile și raportările sunt stocate în Google Firebase (Firebase Authentication și Cloud Firestore). Hărțile și adresele vin de la Apple Maps. Acești furnizori pot prelucra datele în afara Moldovei și a UE, conform propriilor condiții de protecție a datelor."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аккаунты и сообщения хранятся в Google Firebase (Firebase Authentication и Cloud Firestore). Карты и адреса предоставляет Apple Maps. Эти сервисы могут обрабатывать данные за пределами Молдовы и ЕС по своим условиям защиты данных."
+          }
+        }
+      }
+    },
     "Add a photo" : {
       "localizations" : {
         "ro" : {
@@ -339,6 +355,22 @@
         }
       }
     },
+    "Changes" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modificări"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменения"
+          }
+        }
+      }
+    },
     "Check your connection and try again." : {
       "localizations" : {
         "ro" : {
@@ -355,6 +387,22 @@
         }
       }
     },
+    "Children" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copii"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дети"
+          }
+        }
+      }
+    },
     "Choose from Library" : {
       "localizations" : {
         "ro" : {
@@ -367,6 +415,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Выбрать из медиатеки"
+          }
+        }
+      }
+    },
+    "City staff decide when and whether a reported problem is fixed. A status in the app is information, not a promise." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angajații primăriei decid dacă și când se rezolvă o problemă raportată. Statusul din aplicație este o informație, nu o promisiune."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сотрудники города решают, когда и будет ли устранена проблема. Статус в приложении: это информация, а не обещание."
           }
         }
       }
@@ -415,6 +479,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Подтвердите новый пароль"
+          }
+        }
+      }
+    },
+    "Confirm Your Email" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmă adresa de e-mail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердите e-mail"
           }
         }
       }
@@ -527,6 +607,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Не удалось сохранить изменения."
+          }
+        }
+      }
+    },
+    "Couldn't send the email. Wait a few minutes and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailul nu a putut fi trimis. Așteaptă câteva minute și încearcă din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось отправить письмо. Подождите несколько минут и попробуйте снова."
           }
         }
       }
@@ -755,6 +851,22 @@
         }
       }
     },
+    "Don't use your email address in your password." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu folosi adresa de e-mail în parolă."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не используйте адрес e-mail в пароле."
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "ro" : {
@@ -819,6 +931,38 @@
         }
       }
     },
+    "Email sent. It can take a few minutes to arrive." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailul a fost trimis. Poate ajunge în câteva minute."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Письмо отправлено. Оно может прийти через несколько минут."
+          }
+        }
+      }
+    },
+    "Email Verified" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail confirmat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail подтверждён"
+          }
+        }
+      }
+    },
     "Faded Road Markings" : {
       "localizations" : {
         "ro" : {
@@ -831,6 +975,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Стёртая разметка"
+          }
+        }
+      }
+    },
+    "False or duplicate reports sent on purpose, offensive content, advertising, or other people's personal details such as faces or license plates. Staff may remove reports that break these rules, and we may suspend accounts that keep breaking them." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raportări false sau duplicate trimise intenționat, conținut jignitor, reclame sau datele personale ale altor oameni, cum ar fi fețe sau numere de înmatriculare. Angajații pot șterge raportările care încalcă aceste reguli, iar noi putem suspenda conturile care le încalcă în mod repetat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Намеренно ложные или повторные сообщения, оскорбительный контент, рекламу или личные данные других людей, например лица или номерные знаки. Сотрудники могут удалять сообщения, нарушающие эти правила, а мы можем заблокировать аккаунты, которые нарушают их снова и снова."
           }
         }
       }
@@ -931,6 +1091,54 @@
         }
       }
     },
+    "How long we keep it" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cât timp le păstrăm"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как долго мы их храним"
+          }
+        }
+      }
+    },
+    "I agree to the Terms of Use and the Privacy Policy" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunt de acord cu Termenii de utilizare și cu Politica de confidențialitate"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я принимаю Условия использования и Политику конфиденциальности"
+          }
+        }
+      }
+    },
+    "I'm 16 or older" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am 16 ani sau mai mult"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мне 16 лет или больше"
+          }
+        }
+      }
+    },
     "I'm staff" : {
       "localizations" : {
         "ro" : {
@@ -943,6 +1151,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Я сотрудник"
+          }
+        }
+      }
+    },
+    "I've Confirmed My Email" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am confirmat adresa de e-mail"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я подтвердил(а) e-mail"
           }
         }
       }
@@ -975,6 +1199,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Если одна из этих заявок описывает ту же проблему, поддержите её вместо подачи новой. Голоса помогают сотрудникам понять, какие проблемы важнее всего."
+          }
+        }
+      }
+    },
+    "If this policy changes, we'll update the date below and tell you in the app before the change takes effect." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dacă această politică se schimbă, vom actualiza data de mai jos și te vom anunța în aplicație înainte ca modificarea să intre în vigoare."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если эта политика изменится, мы обновим дату ниже и сообщим вам в приложении до того, как изменения вступят в силу."
           }
         }
       }
@@ -1055,6 +1295,54 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Заявка будет удалена с карты для всех пользователей."
+          }
+        }
+      }
+    },
+    "Keep your password private. You can delete your account at any time in Settings." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu dezvălui parola nimănui. Îți poți șterge contul oricând din Setări."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Никому не сообщайте свой пароль. Удалить аккаунт можно в любой момент в Настройках."
+          }
+        }
+      }
+    },
+    "Last updated %@" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultima actualizare: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последнее обновление: %@"
+          }
+        }
+      }
+    },
+    "Liability and law" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Răspundere și legislație"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ответственность и право"
           }
         }
       }
@@ -1267,6 +1555,38 @@
         }
       }
     },
+    "No" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет"
+          }
+        }
+      }
+    },
+    "No guarantee of repairs" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fără garanția reparației"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без гарантии ремонта"
+          }
+        }
+      }
+    },
     "No Reports Yet" : {
       "localizations" : {
         "ro" : {
@@ -1295,6 +1615,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Ещё не запрошен"
+          }
+        }
+      }
+    },
+    "Not for emergencies" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu pentru urgențe"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не для экстренных случаев"
           }
         }
       }
@@ -1411,6 +1747,22 @@
         }
       }
     },
+    "Open the link we sent to %@ to confirm your email. Then you can send reports." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deschide linkul trimis la %@ pentru a confirma adresa de e-mail. Apoi vei putea trimite raportări."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте ссылку, отправленную на %@, чтобы подтвердить e-mail. После этого вы сможете отправлять сообщения."
+          }
+        }
+      }
+    },
     "Options" : {
       "localizations" : {
         "ro" : {
@@ -1460,6 +1812,7 @@
       }
     },
     "Password must be at least 6 characters." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ro" : {
           "stringUnit" : {
@@ -1471,6 +1824,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Пароль должен содержать не менее 6 символов."
+          }
+        }
+      }
+    },
+    "Password must be at least 12 characters." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parola trebuie să aibă cel puțin 12 caractere."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль должен содержать не менее 12 символов."
           }
         }
       }
@@ -1539,6 +1908,22 @@
         }
       }
     },
+    "Privacy Policy" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politica de confidențialitate"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Политика конфиденциальности"
+          }
+        }
+      }
+    },
     "Remove Photo" : {
       "localizations" : {
         "ro" : {
@@ -1599,6 +1984,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Подана"
+          }
+        }
+      }
+    },
+    "Reports, including their photo, description and location, are visible to everyone signed in to RoadFix and to city staff. Your email address is never shown to other users. Don't include faces, license plates or other personal details in photos or descriptions." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raportările, inclusiv fotografia, descrierea și locația, sunt vizibile pentru toți utilizatorii conectați la RoadFix și pentru angajații primăriei. Adresa ta de e-mail nu este arătată niciodată altor utilizatori. Nu include fețe, numere de înmatriculare sau alte date personale în fotografii sau descrieri."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сообщения, включая фото, описание и место, видны всем, кто вошёл в RoadFix, и сотрудникам города. Ваш e-mail никогда не показывается другим пользователям. Не добавляйте в фото и описания лица, номерные знаки и другие личные данные."
           }
         }
       }
@@ -1683,6 +2084,86 @@
         }
       }
     },
+    "RoadFix is for people aged 16 and over. We don't knowingly collect data from children, and we delete any account we learn belongs to a child under 16." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix este pentru persoane cu vârsta de 16 ani sau peste. Nu colectăm intenționat date de la copii și ștergem orice cont despre care aflăm că aparține unui copil sub 16 ani."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix предназначен для людей от 16 лет. Мы сознательно не собираем данные детей и удаляем любой аккаунт, если узнаём, что он принадлежит ребёнку младше 16 лет."
+          }
+        }
+      }
+    },
+    "RoadFix is for reporting real problems on public roads, sidewalks and streetlights. You must be 16 or older to create an account." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix servește la raportarea problemelor reale de pe drumuri, trotuare și iluminatul public. Trebuie să ai cel puțin 16 ani pentru a crea un cont."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix служит для сообщений о реальных проблемах на дорогах, тротуарах и с уличным освещением. Чтобы создать аккаунт, вам должно быть не менее 16 лет."
+          }
+        }
+      }
+    },
+    "RoadFix is not an emergency service. If something is dangerous right now, call 112." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix nu este un serviciu de urgență. Dacă ceva este periculos chiar acum, sună la 112."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix не является экстренной службой. Если что-то опасно прямо сейчас, звоните 112."
+          }
+        }
+      }
+    },
+    "RoadFix is provided as it is, and we are not liable for damage caused by road conditions or by delays in repairs, as far as the law allows. These terms are governed by the laws of the Republic of Moldova." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix este oferit așa cum este și, în măsura permisă de lege, nu răspundem pentru daunele cauzate de starea drumurilor sau de întârzierea reparațiilor. Acești termeni sunt guvernați de legislația Republicii Moldova."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix предоставляется как есть, и в пределах, допустимых законом, мы не несём ответственности за ущерб из-за состояния дорог или задержек ремонта. Эти условия регулируются законодательством Республики Молдова."
+          }
+        }
+      }
+    },
+    "RoadFix lets residents report road problems such as potholes and broken streetlights so city staff can fix them. RoadFix is run from the Republic of Moldova. You can reach us through the support contact on the RoadFix App Store page." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix le permite locuitorilor să raporteze probleme ale drumurilor, cum ar fi gropile și felinarele defecte, ca angajații primăriei să le poată rezolva. RoadFix este administrat din Republica Moldova. Ne poți contacta prin datele de suport de pe pagina RoadFix din App Store."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix позволяет жителям сообщать о проблемах на дорогах, например о ямах и неработающих фонарях, чтобы сотрудники города могли их устранить. RoadFix работает из Республики Молдова. Связаться с нами можно через контакт поддержки на странице RoadFix в App Store."
+          }
+        }
+      }
+    },
     "RoadFix only uses your location while the app is open, to pin new reports and show where you are on the map." : {
       "localizations" : {
         "ro" : {
@@ -1695,6 +2176,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "RoadFix использует вашу геопозицию, только когда приложение открыто: чтобы отмечать новые заявки и показывать, где вы находитесь на карте."
+          }
+        }
+      }
+    },
+    "RoadFix uses your location only while the app is open, to pin new reports and show where you are on the map. A location is saved only when you send a report, and only the spot you pinned." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix folosește locația ta doar cât aplicația este deschisă, pentru a marca raportările noi și a-ți arăta poziția pe hartă. O locație se salvează doar când trimiți o raportare și doar punctul pe care l-ai marcat."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RoadFix использует ваше местоположение только пока приложение открыто: чтобы отметить новое сообщение и показать вас на карте. Место сохраняется только при отправке сообщения, и только отмеченная вами точка."
           }
         }
       }
@@ -1823,6 +2320,38 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Отправить ссылку для сброса"
+          }
+        }
+      }
+    },
+    "Send the Email Again" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trimite e-mailul din nou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправить письмо ещё раз"
+          }
+        }
+      }
+    },
+    "Services we rely on" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servicii pe care le folosim"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сервисы, которые мы используем"
           }
         }
       }
@@ -2067,6 +2596,22 @@
         }
       }
     },
+    "Terms of Use" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termeni de utilizare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Условия использования"
+          }
+        }
+      }
+    },
     "That email address doesn't look right." : {
       "localizations" : {
         "ro" : {
@@ -2084,6 +2629,7 @@
       }
     },
     "The new password must be at least 6 characters." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ro" : {
           "stringUnit" : {
@@ -2115,6 +2661,22 @@
         }
       }
     },
+    "The passwords don't match." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolele nu coincid."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароли не совпадают."
+          }
+        }
+      }
+    },
     "This can't be undone." : {
       "localizations" : {
         "ro" : {
@@ -2131,6 +2693,22 @@
         }
       }
     },
+    "This password is too common. Choose another one." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Această parolă este prea des folosită. Alege alta."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот пароль слишком распространён. Выберите другой."
+          }
+        }
+      }
+    },
     "This permanently removes the report and its photo for everyone." : {
       "localizations" : {
         "ro" : {
@@ -2143,6 +2721,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Заявка и её фото будут безвозвратно удалены для всех пользователей."
+          }
+        }
+      }
+    },
+    "To run the service you signed up for: sending reports to city staff and showing their progress. And to keep the service safe, for example by limiting how often reports can be sent. We don't show ads, we don't use analytics or tracking, and we never sell your data." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pentru a oferi serviciul la care te-ai înscris: trimiterea raportărilor către angajații primăriei și afișarea progresului. Și pentru a menține serviciul sigur, de exemplu limitând cât de des se pot trimite raportări. Nu afișăm reclame, nu folosim analiză sau urmărire și nu vindem niciodată datele tale."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы работал сервис, на который вы зарегистрировались: передача сообщений сотрудникам города и показ хода работ. И чтобы сервис был безопасным, например за счёт ограничения частоты сообщений. Мы не показываем рекламу, не используем аналитику и отслеживание и никогда не продаём ваши данные."
           }
         }
       }
@@ -2175,6 +2769,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Неизвестен"
+          }
+        }
+      }
+    },
+    "Until you delete it. You can withdraw any of your reports, and Settings > Delete Account removes your account, all your reports and their photos straight away." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Până când le ștergi. Poți retrage oricare dintre raportările tale, iar Setări > Șterge contul îți elimină imediat contul, toate raportările și fotografiile lor."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока вы их не удалите. Вы можете отозвать любое своё сообщение, а Настройки > Удалить аккаунт сразу удаляет аккаунт, все ваши сообщения и их фото."
           }
         }
       }
@@ -2227,6 +2837,22 @@
         }
       }
     },
+    "Use at least 12 characters." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folosește cel puțin 12 caractere."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Используйте не менее 12 символов."
+          }
+        }
+      }
+    },
     "Use My Current Location" : {
       "localizations" : {
         "ro" : {
@@ -2255,6 +2881,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "При следующем входе используйте новый пароль."
+          }
+        }
+      }
+    },
+    "Using RoadFix" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folosirea RoadFix"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использование RoadFix"
           }
         }
       }
@@ -2291,6 +2933,38 @@
         }
       }
     },
+    "What we collect" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce date colectăm"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Какие данные мы собираем"
+          }
+        }
+      }
+    },
+    "What you may not post" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce nu ai voie să publici"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что нельзя публиковать"
+          }
+        }
+      }
+    },
     "What's the issue?" : {
       "localizations" : {
         "ro" : {
@@ -2319,6 +2993,54 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "При использовании приложения"
+          }
+        }
+      }
+    },
+    "Who can see your reports" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cine îți vede raportările"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кто видит ваши сообщения"
+          }
+        }
+      }
+    },
+    "Who we are" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cine suntem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кто мы"
+          }
+        }
+      }
+    },
+    "Why we use your data" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De ce folosim datele tale"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зачем мы используем ваши данные"
           }
         }
       }
@@ -2355,6 +3077,54 @@
         }
       }
     },
+    "Yes" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Da"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Да"
+          }
+        }
+      }
+    },
+    "You can ask for a copy of your data, ask us to correct or delete it, or object to how we use it. You can also complain to the National Center for Personal Data Protection of Moldova (CNPDCP) or, in the EU, to your local data protection authority." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poți cere o copie a datelor tale, corectarea sau ștergerea lor ori te poți opune modului în care le folosim. Poți depune și o plângere la Centrul Național pentru Protecția Datelor cu Caracter Personal (CNPDCP) sau, în UE, la autoritatea locală de protecție a datelor."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы можете запросить копию своих данных, их исправление или удаление, а также возразить против их использования. Вы также можете подать жалобу в Национальный центр по защите персональных данных Молдовы (CNPDCP) или, в ЕС, в местный орган по защите данных."
+          }
+        }
+      }
+    },
+    "You can send one report per minute. Wait a moment and try again." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poți trimite o raportare pe minut. Așteaptă puțin și încearcă din nou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Можно отправлять одно сообщение в минуту. Подождите немного и попробуйте снова."
+          }
+        }
+      }
+    },
     "You don't have permission to do that." : {
       "localizations" : {
         "ro" : {
@@ -2367,6 +3137,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "У вас нет прав на это действие."
+          }
+        }
+      }
+    },
+    "You keep the rights to what you post. By sending a report you allow RoadFix and city staff to show it in the app so the problem can be handled." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drepturile asupra a ceea ce publici rămân ale tale. Trimițând o raportare, permiți RoadFix și angajaților primăriei să o afișeze în aplicație pentru ca problema să fie rezolvată."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Права на то, что вы публикуете, остаются за вами. Отправляя сообщение, вы разрешаете RoadFix и сотрудникам города показывать его в приложении, чтобы проблему можно было решить."
           }
         }
       }
@@ -2387,6 +3173,22 @@
         }
       }
     },
+    "Your account" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contul tău"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш аккаунт"
+          }
+        }
+      }
+    },
     "Your current password is incorrect." : {
       "localizations" : {
         "ro" : {
@@ -2403,6 +3205,70 @@
         }
       }
     },
+    "Your email address and password, used only to sign you in. Your password is handled by Firebase Authentication and we never see it. Your account role (citizen or staff) and the dates you created your account and accepted these terms. For each report you send: the category, your description, the location and street address, an optional photo and the time. When you upvote a report, your account ID is added to it so you can only upvote once." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresa de e-mail și parola, folosite doar pentru autentificare. Parola este gestionată de Firebase Authentication și noi nu o vedem niciodată. Rolul contului (cetățean sau angajat) și datele la care ți-ai creat contul și ai acceptat acești termeni. Pentru fiecare raportare: categoria, descrierea, locația și adresa, o fotografie opțională și ora. Când susții o raportare, ID-ul contului tău se adaugă la ea, ca să o poți susține o singură dată."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш e-mail и пароль, которые используются только для входа. Паролем управляет Firebase Authentication, и мы его никогда не видим. Роль аккаунта (житель или сотрудник) и даты создания аккаунта и принятия этих условий. Для каждого сообщения: категория, описание, место и адрес, необязательное фото и время. Когда вы поддерживаете сообщение, к нему добавляется ID вашего аккаунта, чтобы голосовать можно было только один раз."
+          }
+        }
+      }
+    },
+    "Your email isn't confirmed yet. Check your inbox and spam folder." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresa de e-mail nu este încă confirmată. Verifică inboxul și dosarul de spam."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail ещё не подтверждён. Проверьте входящие и папку «Спам»."
+          }
+        }
+      }
+    },
+    "Your photos and text" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotografiile și textele tale"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши фото и тексты"
+          }
+        }
+      }
+    },
+    "Your report was refused. Make sure your email is verified, and wait a minute between reports." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raportarea a fost refuzată. Verifică dacă adresa de e-mail este confirmată și așteaptă un minut între raportări."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сообщение отклонено. Убедитесь, что e-mail подтверждён, и подождите минуту между сообщениями."
+          }
+        }
+      }
+    },
     "Your reports and photos will be removed for everyone." : {
       "localizations" : {
         "ro" : {
@@ -2415,6 +3281,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Ваши заявки и фото будут удалены для всех пользователей."
+          }
+        }
+      }
+    },
+    "Your rights" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drepturile tale"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваши права"
           }
         }
       }

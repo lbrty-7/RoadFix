@@ -3,8 +3,8 @@
 //  RoadFix
 //
 //  Shared building blocks for LoginView and SignUpView: a blurred city-map
-//  background, the app header, a Liquid Glass field card and the primary
-//  button, so both screens match the map-first look of the rest of the app.
+//  background, the app header, a solid field card and the primary button,
+//  so both screens match the map-first look of the rest of the app.
 //
 
 import SwiftUI
@@ -68,7 +68,6 @@ struct AuthHeader: View {
                 .scaledToFit()
                 .frame(width: 72, height: 72)
                 .clipShape(.rect(cornerRadius: 18))
-                .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
                 .accessibilityHidden(true)
 
             Text(title)
@@ -82,7 +81,8 @@ struct AuthHeader: View {
     }
 }
 
-/// Grouped rows on a Liquid Glass card, like the app's Settings rows.
+/// Grouped rows on an opaque card, like the app's Settings rows. Opaque
+/// rather than glass so the fields stay readable over the map.
 struct AuthCard<Content: View>: View {
     @ViewBuilder var content: Content
 
@@ -90,7 +90,11 @@ struct AuthCard<Content: View>: View {
         VStack(spacing: 0) {
             content
         }
-        .glassEffect(.regular, in: .rect(cornerRadius: 22))
+        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: 12))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(Color(.separator))
+        }
     }
 }
 
@@ -166,7 +170,7 @@ struct AuthErrorText: View {
     }
 }
 
-/// Full-width glass button that shows a spinner while a request is running.
+/// Full-width filled button that shows a spinner while a request is running.
 struct AuthPrimaryButton: View {
     let title: String
     let isLoading: Bool
@@ -186,8 +190,33 @@ struct AuthPrimaryButton: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.glassProminent)
+        .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .disabled(!isEnabled || isLoading)
+    }
+}
+
+/// A square checkbox for consent rows: the label wraps, and the whole row
+/// is tappable. VoiceOver reads it as a toggle with its on/off value.
+struct CheckboxToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                    .foregroundStyle(configuration.isOn ? Color.accentColor : .secondary)
+                    .accessibilityHidden(true)
+                configuration.label
+                    .font(.subheadline)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityRepresentation {
+            Toggle(isOn: configuration.$isOn) { configuration.label }
+        }
     }
 }

@@ -17,6 +17,9 @@ final class AuthViewModel: ObservableObject {
     // True while a sign-in or sign-up request is running, so the button can
     // show a spinner and can't be tapped twice.
     @Published var isSubmitting: Bool = false
+    // firestore.rules only accept new reports from verified addresses, so
+    // NewReportView asks the user to confirm their email first.
+    @Published var isEmailVerified: Bool = false
 
     // During sign-up the auth listener fires before the profile doc exists;
     // keep isSubmitting on until createUserProfile finishes.
@@ -69,6 +72,7 @@ final class AuthViewModel: ObservableObject {
                     return
                 }
                 self.currentUser = AppUser(id: uid, email: email, role: role)
+                self.isEmailVerified = Auth.auth().currentUser?.isEmailVerified ?? false
                 self.isSubmitting = false
             }
         }
@@ -77,7 +81,7 @@ final class AuthViewModel: ObservableObject {
     func signIn(email: String, password: String) {
         errorMessage = nil
         isSubmitting = true
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] _, error in
+        Auth.auth().signIn(withEmail: PasswordPolicy.normalizedEmail(email), password: password) { [weak self] _, error in
             guard let error else { return }
             let message = Self.mapAuthError(error)
             Task { @MainActor in
@@ -88,6 +92,7 @@ final class AuthViewModel: ObservableObject {
     }
 
     func signUp(email: String, password: String, staffCode: String?) {
+        let email = PasswordPolicy.normalizedEmail(email)
         errorMessage = nil
         isSubmitting = true
         isCreatingAccount = true
@@ -126,7 +131,10 @@ final class AuthViewModel: ObservableObject {
         var data: [String: Any] = [
             "email": email,
             "role": role,
-            "createdAt": FieldValue.serverTimestamp()
+            "createdAt": FieldValue.serverTimestamp(),
+            // Sign-up can't finish without ticking the terms and age boxes,
+            // so this records when that consent was given.
+            "termsAcceptedAt": FieldValue.serverTimestamp()
         ]
         if let staffCode {
             data["staffCode"] = staffCode
@@ -150,8 +158,10 @@ final class AuthViewModel: ObservableObject {
                     return
                 }
                 self.currentUser = AppUser(id: uid, email: email, role: role)
+                self.isEmailVerified = false
                 self.errorMessage = nil
                 self.finishSubmitting()
+                createdUser.sendEmailVerification(completion: nil)
             }
         }
     }
@@ -165,6 +175,7 @@ final class AuthViewModel: ObservableObject {
         do {
             try Auth.auth().signOut()
             currentUser = nil
+            isEmailVerified = false
             errorMessage = nil
             finishSubmitting()
         } catch {
@@ -186,7 +197,24 @@ final class AuthViewModel: ObservableObject {
     // Firebase sends the email and hosts the reset page. It doesn't say
     // whether an account exists for the address, so neither does the app.
     func sendPasswordReset(email: String) async throws {
-        try await Auth.auth().sendPasswordReset(withEmail: email)
+        try await Auth.auth().sendPasswordReset(withEmail: PasswordPolicy.normalizedEmail(email))
+    }
+
+    func resendVerificationEmail() async throws {
+        guard let user = Auth.auth().currentUser else { return }
+        try await user.sendEmailVerification()
+    }
+
+    // After the user taps the link in the email, reload the account and
+    // fetch a fresh ID token: the rules read email_verified from the token,
+    // and the cached one still says false.
+    func refreshEmailVerification() async {
+        guard let user = Auth.auth().currentUser else { return }
+        try? await user.reload()
+        if user.isEmailVerified {
+            _ = try? await user.getIDTokenResult(forcingRefresh: true)
+        }
+        isEmailVerified = user.isEmailVerified
     }
 
     // Removes everything the user created — their reports, report photos and
@@ -245,8 +273,10 @@ final class AuthViewModel: ObservableObject {
             return String(localized: "An account with that email already exists.")
         case .invalidEmail:
             return String(localized: "That email address doesn't look right.")
-        case .weakPassword:
-            return String(localized: "Password must be at least 6 characters.")
+        case .weakPassword, .passwordDoesNotMeetRequirements:
+            return String(localized: "Password must be at least 12 characters.")
+        case .tooManyRequests:
+            return String(localized: "Too many attempts. Wait a few minutes and try again.")
         case .networkError:
             return String(localized: "Network error. Check your connection and try again.")
         default:

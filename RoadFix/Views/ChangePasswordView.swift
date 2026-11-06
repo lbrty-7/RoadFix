@@ -11,9 +11,13 @@ struct ChangePasswordView: View {
     @State private var errorMessage: String?
     @State private var showSuccess = false
 
+    private var email: String {
+        authViewModel.currentUser?.email ?? ""
+    }
+
     private var validationMessage: String? {
-        if !newPassword.isEmpty && newPassword.count < 6 {
-            return String(localized: "The new password must be at least 6 characters.")
+        if !newPassword.isEmpty, let problem = PasswordPolicy.problem(with: newPassword, email: email) {
+            return problem
         }
         if !confirmPassword.isEmpty && newPassword != confirmPassword {
             return String(localized: "The new passwords don't match.")
@@ -23,7 +27,7 @@ struct ChangePasswordView: View {
 
     private var canSave: Bool {
         !currentPassword.isEmpty
-            && newPassword.count >= 6
+            && PasswordPolicy.isAcceptable(newPassword, email: email)
             && newPassword == confirmPassword
             && !isSaving
     }
