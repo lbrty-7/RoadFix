@@ -13,6 +13,16 @@
 		491F21F9306207DA00FA4CC8 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 491F21F8306207DA00FA4CC8 /* Sentry */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0C7FD60A306D7B1C00B9B932 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 491F21BE3061FD4500FA4CC8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 491F21C53061FD4500FA4CC8;
+			remoteInfo = RoadFix;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0C7FD602306D7B1C00B9B932 /* RoadFixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoadFixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		491F21C63061FD4500FA4CC8 /* RoadFix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoadFix.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +95,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0C7FD60B306D7B1C00B9B932 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				0C7FD603306D7B1C00B9B932 /* RoadFixTests */,
@@ -200,6 +211,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0C7FD60B306D7B1C00B9B932 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 491F21C53061FD4500FA4CC8 /* RoadFix */;
+			targetProxy = 0C7FD60A306D7B1C00B9B932 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0C7FD607306D7B1C00B9B932 /* Debug */ = {
