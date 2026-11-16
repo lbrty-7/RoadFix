@@ -42,6 +42,7 @@ jobs:
           xcodebuild -version
 
       - name: Restore Swift packages from cache
+        id: spm-cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.SPM_DIR }}
@@ -51,7 +52,10 @@ jobs:
       - name: Write placeholder Firebase config
         run: bash ci/write-test-config.sh
 
+      # Skipped when the cache matches Package.resolved exactly: the packages
+      # are already there at the pinned versions.
       - name: Resolve Swift packages
+        if: steps.spm-cache.outputs.cache-hit != 'true'
         run: |
           # sentry-cocoa is a large repository; HTTP/1.1 avoids the HTTP/2
           # stream errors that can break long clones.
@@ -62,21 +66,32 @@ jobs:
             -clonedSourcePackagesDirPath "$SPM_DIR" \
             -scmProvider system
 
-      - name: Pick an iPhone simulator
+      # Picks a common iPhone on the newest released (non-beta) iOS runtime and
+      # starts booting it now, so it boots while the app compiles instead of
+      # after. A cold boot is the slowest part of the run.
+      - name: Pick and boot an iPhone simulator
         run: |
-          id=$(xcrun simctl list devices available --json | python3 -c '
+          id=$(xcrun simctl list --json | python3 -c '
           import json, sys
-          runtimes = json.load(sys.stdin)["devices"]
-          ios = sorted((r for r in runtimes if ".iOS-" in r), reverse=True)
-          for runtime in ios:
-              phones = [d for d in runtimes[runtime] if d["name"].startswith("iPhone")]
+          data = json.load(sys.stdin)
+          # Beta runtimes have a build number ending in a letter, e.g. 24B91016s.
+          released = {
+              r["identifier"]: tuple(int(p) for p in r["version"].split("."))
+              for r in data["runtimes"]
+              if r.get("isAvailable") and r.get("platform") == "iOS" and not r["buildversion"][-1].isalpha()
+          }
+          preferred = ["iPhone 18 Pro", "iPhone 17", "iPhone 18 Pro Max", "iPhone Air"]
+          for runtime in sorted(released, key=released.get, reverse=True):
+              phones = [d for d in data["devices"].get(runtime, []) if d.get("isAvailable") and d["name"].startswith("iPhone")]
+              phones.sort(key=lambda d: preferred.index(d["name"]) if d["name"] in preferred else len(preferred))
               if phones:
                   print(phones[0]["udid"])
                   break
           ')
-          if [[ -z "$id" ]]; then echo "::error::No iPhone simulator available"; exit 1; fi
+          if [[ -z "$id" ]]; then echo "::error::No iPhone simulator on a released iOS runtime"; exit 1; fi
           echo "SIMULATOR_ID=$id" >> "$GITHUB_ENV"
           xcrun simctl list devices available | grep "$id"
+          xcrun simctl boot "$id"
 
       - name: Build
         run: |
@@ -92,6 +107,11 @@ jobs:
             | tee build.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)|\*\* " || true
           grep -q "TEST BUILD SUCCEEDED" build.log
 
+      - name: Wait for the simulator to finish booting
+        run: xcrun simctl bootstatus "$SIMULATOR_ID" -b
+
+      # Parallel testing would boot extra clones of the simulator, which costs
+      # minutes and gains nothing for a suite this size.
       - name: Run tests
         run: |
           set -o pipefail
@@ -99,6 +119,7 @@ jobs:
             -project RoadFix.xcodeproj \
             -scheme RoadFix \
             -destination "id=$SIMULATOR_ID" \
+            -parallel-testing-enabled NO \
             -derivedDataPath build \
             -resultBundlePath TestResults.xcresult \
             | tee test.log | grep -E "Test run with|✘|✔|recorded an issue|\*\* TEST" || true
