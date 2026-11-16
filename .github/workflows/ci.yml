@@ -1,0 +1,142 @@
+# Builds RoadFix and runs its tests on every pull request and every push to
+# main. If anything fails, the run fails and the pull request shows a red check.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege: this workflow only needs to read the code.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older, now outdated run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  XCODE_VERSION: "27.2"
+  SPM_DIR: ${{ github.workspace }}/.spm
+
+jobs:
+  build-and-test:
+    name: Build and test (iOS)
+    # GitHub's image with Xcode 27, the version the project is made with.
+    runs-on: xcode-27
+    timeout-minutes: 45
+
+    steps:
+      # Actions are pinned to a commit so a changed tag can't run other code.
+      - name: Check out the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check that no private config is committed
+        run: bash ci/check-no-secrets.sh
+
+      - name: Select Xcode ${{ env.XCODE_VERSION }}
+        run: |
+          sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app"
+          xcodebuild -version
+
+      - name: Restore Swift packages from cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.SPM_DIR }}
+          key: spm-${{ runner.os }}-${{ hashFiles('RoadFix.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+
+      - name: Write placeholder Firebase config
+        run: bash ci/write-test-config.sh
+
+      - name: Resolve Swift packages
+        run: |
+          # sentry-cocoa is a large repository; HTTP/1.1 avoids the HTTP/2
+          # stream errors that can break long clones.
+          git config --global http.version HTTP/1.1
+          xcodebuild -resolvePackageDependencies \
+            -project RoadFix.xcodeproj \
+            -scheme RoadFix \
+            -clonedSourcePackagesDirPath "$SPM_DIR" \
+            -scmProvider system
+
+      - name: Pick an iPhone simulator
+        run: |
+          id=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          runtimes = json.load(sys.stdin)["devices"]
+          ios = sorted((r for r in runtimes if ".iOS-" in r), reverse=True)
+          for runtime in ios:
+              phones = [d for d in runtimes[runtime] if d["name"].startswith("iPhone")]
+              if phones:
+                  print(phones[0]["udid"])
+                  break
+          ')
+          if [[ -z "$id" ]]; then echo "::error::No iPhone simulator available"; exit 1; fi
+          echo "SIMULATOR_ID=$id" >> "$GITHUB_ENV"
+          xcrun simctl list devices available | grep "$id"
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project RoadFix.xcodeproj \
+            -scheme RoadFix \
+            -destination "id=$SIMULATOR_ID" \
+            -clonedSourcePackagesDirPath "$SPM_DIR" \
+            -disableAutomaticPackageResolution \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)|\*\* " || true
+          grep -q "TEST BUILD SUCCEEDED" build.log
+
+      - name: Run tests
+        run: |
+          set -o pipefail
+          xcodebuild test-without-building \
+            -project RoadFix.xcodeproj \
+            -scheme RoadFix \
+            -destination "id=$SIMULATOR_ID" \
+            -derivedDataPath build \
+            -resultBundlePath TestResults.xcresult \
+            | tee test.log | grep -E "Test run with|✘|✔|recorded an issue|\*\* TEST" || true
+          grep -q "TEST EXECUTE SUCCEEDED" test.log
+
+      - name: Write test summary
+        if: always()
+        run: |
+          if [[ ! -d TestResults.xcresult ]]; then
+            echo "No test results (the build failed before the tests ran)." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          xcrun xcresulttool get test-results summary --path TestResults.xcresult > summary.json
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          s = json.load(open("summary.json"))
+          icon = "✅" if s.get("result") == "Passed" else "❌"
+          print(f"## {icon} Tests {s.get('result', 'unknown').lower()}")
+          print()
+          print("| Total | Passed | Failed | Skipped |")
+          print("|---|---|---|---|")
+          print(f"| {s.get('totalTestCount', 0)} | {s.get('passedTests', 0)} | {s.get('failedTests', 0)} | {s.get('skippedTests', 0)} |")
+          failures = s.get("testFailures", [])
+          if failures:
+              print()
+              print("### Failed tests")
+              for f in failures:
+                  print(f"- `{f.get('testName', '?')}`: {f.get('failureText', '').strip()}")
+          PY
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results
+          path: |
+            TestResults.xcresult
+            build.log
+            test.log
+          if-no-files-found: ignore
+          retention-days: 14
