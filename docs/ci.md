@@ -14,9 +14,9 @@ If any step fails, the run fails and the pull request shows a red ✗. Once `mai
 | 4 | **Restore Swift packages from cache** | Reuses Firebase and Sentry from earlier runs. The cache key is `Package.resolved`, so a dependency change downloads them again. |
 | 5 | **Write placeholder Firebase config** | [`ci/write-test-config.sh`](../ci/write-test-config.sh) writes a `GoogleService-Info.plist` with fake values so the app can start for the tests. |
 | 6 | **Resolve Swift packages** | Downloads the exact package versions pinned in `Package.resolved`. Skipped when the cache already matches them. |
-| 7 | **Pick and boot an iPhone simulator** | Chooses a common iPhone on the newest released (non-beta) iOS runtime and starts booting it, so it boots while the app compiles. |
+| 7 | **Pick an iPhone simulator** | Chooses a common iPhone on the newest released (non-beta) iOS runtime. |
 | 8 | **Build** | Compiles the app and the test target for the simulator (`build-for-testing`). A compile error fails the run here. |
-| 9 | **Wait for the simulator to finish booting** | Usually already done by the time the build ends. |
+| 9 | **Boot the simulator** | Starts the simulator and waits until it's ready. |
 | 10 | **Run tests** | Runs every unit test (`test-without-building`), one at a time on that simulator. One failing test fails the run. |
 | 11 | **Write test summary** | Adds a table of total, passed, failed and skipped tests (and the names of failed ones) to the run's summary page. Runs even if the tests failed. |
 | 12 | **Upload test results** | Saves `TestResults.xcresult` and the build and test logs as the `test-results` artifact for 14 days. Runs even if the tests failed. |
@@ -27,7 +27,7 @@ The tests themselves take about a second. Most of the run is setup:
 
 - **Swift packages:** cached between runs (key: `Package.resolved`), so they're downloaded only when a dependency changes.
 - **Build:** Firebase compiles from source, about two minutes.
-- **Simulator:** a cold boot takes minutes, so it starts before the build and runs alongside it. Tests run without parallel testing, which would boot extra simulator clones for no gain on a suite this size. Beta runtimes are skipped because they boot slower and are less stable.
+- **Simulator:** a cold boot takes minutes. It boots after the build, not alongside it: on the runner's few CPU cores, booting during the build slowed the build from about 2 to 16 minutes. Tests run without parallel testing, which would boot extra simulator clones for no gain on a suite this size. Beta runtimes are skipped because they boot slower and are less stable.
 
 ## Showing the results
 

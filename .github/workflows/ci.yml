@@ -66,10 +66,8 @@ jobs:
             -clonedSourcePackagesDirPath "$SPM_DIR" \
             -scmProvider system
 
-      # Picks a common iPhone on the newest released (non-beta) iOS runtime and
-      # starts booting it now, so it boots while the app compiles instead of
-      # after. A cold boot is the slowest part of the run.
-      - name: Pick and boot an iPhone simulator
+      # Picks a common iPhone on the newest released (non-beta) iOS runtime.
+      - name: Pick an iPhone simulator
         run: |
           id=$(xcrun simctl list --json | python3 -c '
           import json, sys
@@ -91,7 +89,6 @@ jobs:
           if [[ -z "$id" ]]; then echo "::error::No iPhone simulator on a released iOS runtime"; exit 1; fi
           echo "SIMULATOR_ID=$id" >> "$GITHUB_ENV"
           xcrun simctl list devices available | grep "$id"
-          xcrun simctl boot "$id"
 
       - name: Build
         run: |
@@ -107,7 +104,9 @@ jobs:
             | tee build.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)|\*\* " || true
           grep -q "TEST BUILD SUCCEEDED" build.log
 
-      - name: Wait for the simulator to finish booting
+      # Booted after the build, not during it: on the runner's few CPU cores
+      # a booting simulator slowed the build from about 2 to 16 minutes.
+      - name: Boot the simulator
         run: xcrun simctl bootstatus "$SIMULATOR_ID" -b
 
       # Parallel testing would boot extra clones of the simulator, which costs
