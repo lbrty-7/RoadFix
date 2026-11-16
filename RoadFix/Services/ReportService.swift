@@ -48,7 +48,10 @@ class ReportService: ObservableObject {
             .limit(to: Self.listLimit)
             .addSnapshotListener { [weak self] snapshot, error in
             guard let self, let documents = snapshot?.documents else {
-                if let error { print("Reports listener error: \(error.localizedDescription)") }
+                if let error {
+                    print("Reports listener error: \(error.localizedDescription)")
+                    CrashReporting.record(error, action: "listen to reports")
+                }
                 return
             }
             self.reports = documents
@@ -138,6 +141,11 @@ class ReportService: ObservableObject {
             }
             print("Submit report error: \(error.localizedDescription)")
             let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
+            // A refusal here is expected (unverified email or the one-per-minute
+            // limit), so only other failures are worth a Sentry report.
+            if code != .permissionDenied {
+                CrashReporting.record(error, action: "submit report")
+            }
             completion(code == .permissionDenied
                 ? String(localized: "Your report was refused. Make sure your email is verified, and wait a minute between reports.")
                 : String(localized: "Check your connection and try again."))
@@ -239,10 +247,11 @@ class ReportService: ObservableObject {
 
     // Shows actionError (ContentView presents it as an alert) when a write
     // is rejected, instead of failing silently.
-    private func failureHandler(_ message: String) -> (Error?) -> Void {
+    private func failureHandler(_ message: String, action: String = #function) -> (Error?) -> Void {
         { [weak self] error in
             guard let error else { return }
             print("\(message) \(error.localizedDescription)")
+            CrashReporting.record(error, action: action)
             let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
             let reason = switch code {
             case .permissionDenied: String(localized: "You don't have permission to do that.")

@@ -223,3 +223,23 @@ struct PasswordPolicyTests {
         #expect(PasswordPolicy.normalizedEmail("  Ana@Mail.COM \n") == "ana@mail.com")
     }
 }
+
+struct CrashReportingTests {
+    @Test func connectionProblemsAreSkipped() {
+        #expect(CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.unavailable.rawValue)))
+        #expect(CrashReporting.isConnectionProblem(NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet)))
+        #expect(CrashReporting.isConnectionProblem(URLError(.timedOut)))
+    }
+
+    @Test func wrappedConnectionProblemIsSkipped() {
+        let offline = NSError(domain: NSURLErrorDomain, code: NSURLErrorNetworkConnectionLost)
+        let wrapped = NSError(domain: "FIRAuthErrorDomain", code: 17999, userInfo: [NSUnderlyingErrorKey: offline])
+        #expect(CrashReporting.isConnectionProblem(wrapped))
+    }
+
+    @Test func realFailuresAreReported() {
+        #expect(!CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.permissionDenied.rawValue)))
+        #expect(!CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.internal.rawValue)))
+        #expect(!CrashReporting.isConnectionProblem(NSError(domain: "RoadFix", code: 1)))
+    }
+}

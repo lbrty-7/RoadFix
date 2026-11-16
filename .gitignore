@@ -9,6 +9,10 @@ build/
 # (it goes in RoadFix/ next to RoadFixApp.swift).
 RoadFix/GoogleService-Info.plist
 
+# Sentry DSN, kept out of the public repo the same way. Copy
+# Sentry-Info.example.plist to RoadFix/Sentry-Info.plist and fill it in.
+RoadFix/Sentry-Info.plist
+
 # Web simulator
 web-sim/node_modules/
 

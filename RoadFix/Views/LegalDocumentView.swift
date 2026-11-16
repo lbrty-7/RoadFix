@@ -16,7 +16,7 @@ enum LegalDocument: String, Identifiable {
         }
     }
 
-    static let lastUpdated = DateComponents(calendar: .current, year: 2026, month: 11, day: 6).date ?? .now
+    static let lastUpdated = DateComponents(calendar: .current, year: 2026, month: 11, day: 16).date ?? .now
 
     struct Section: Identifiable {
         let heading: String
@@ -49,8 +49,12 @@ enum LegalDocument: String, Identifiable {
                     body: String(localized: "To run the service you signed up for: sending reports to city staff and showing their progress. And to keep the service safe, for example by limiting how often reports can be sent. We don't show ads, we don't use analytics or tracking, and we never sell your data.")
                 ),
                 Section(
+                    heading: String(localized: "Crash reports"),
+                    body: String(localized: "When the app crashes, freezes or an action fails unexpectedly, RoadFix sends a technical report to Sentry so we can fix the bug: what went wrong, where in the app's code, the app version and the device model and iOS version. These reports don't include your email, your IP address, screenshots, your reports or your photos.")
+                ),
+                Section(
                     heading: String(localized: "Services we rely on"),
-                    body: String(localized: "Accounts and reports are stored with Google Firebase (Firebase Authentication and Cloud Firestore). Maps and street addresses come from Apple Maps. These providers may process data outside Moldova and the EU under their own data protection terms.")
+                    body: String(localized: "Accounts and reports are stored with Google Firebase (Firebase Authentication and Cloud Firestore). Maps and street addresses come from Apple Maps. Crash and error reports go to Sentry, stored in the EU. These providers may process data outside Moldova and the EU under their own data protection terms.")
                 ),
                 Section(
                     heading: String(localized: "How long we keep it"),

@@ -10,6 +10,7 @@
 		491F21F1306207DA00FA4CC8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 491F21F0306207DA00FA4CC8 /* FirebaseAuth */; };
 		491F21F3306207DA00FA4CC8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 491F21F2306207DA00FA4CC8 /* FirebaseFirestore */; };
 		491F21F5306207DA00FA4CC8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 491F21F4306207DA00FA4CC8 /* FirebaseStorage */; };
+		491F21F9306207DA00FA4CC8 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 491F21F8306207DA00FA4CC8 /* Sentry */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 				491F21F1306207DA00FA4CC8 /* FirebaseAuth in Frameworks */,
 				491F21F3306207DA00FA4CC8 /* FirebaseFirestore in Frameworks */,
 				491F21F5306207DA00FA4CC8 /* FirebaseStorage in Frameworks */,
+				491F21F9306207DA00FA4CC8 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +116,7 @@
 				491F21F0306207DA00FA4CC8 /* FirebaseAuth */,
 				491F21F2306207DA00FA4CC8 /* FirebaseFirestore */,
 				491F21F4306207DA00FA4CC8 /* FirebaseStorage */,
+				491F21F8306207DA00FA4CC8 /* Sentry */,
 			);
 			productName = RoadFix;
 			productReference = 491F21C63061FD4500FA4CC8 /* RoadFix.app */;
@@ -151,6 +154,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				491F21EF306207DA00FA4CC8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				491F21F7306207DA00FA4CC8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 491F21C73061FD4500FA4CC8 /* Products */;
@@ -487,6 +491,14 @@
 				minimumVersion = 12.19.2;
 			};
 		};
+		491F21F7306207DA00FA4CC8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.34.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -504,6 +516,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 491F21EF306207DA00FA4CC8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		491F21F8306207DA00FA4CC8 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 491F21F7306207DA00FA4CC8 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

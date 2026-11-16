@@ -195,18 +195,18 @@
         }
       }
     },
-    "Accounts and reports are stored with Google Firebase (Firebase Authentication and Cloud Firestore). Maps and street addresses come from Apple Maps. These providers may process data outside Moldova and the EU under their own data protection terms." : {
+    "Accounts and reports are stored with Google Firebase (Firebase Authentication and Cloud Firestore). Maps and street addresses come from Apple Maps. Crash and error reports go to Sentry, stored in the EU. These providers may process data outside Moldova and the EU under their own data protection terms." : {
       "localizations" : {
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conturile și raportările sunt stocate în Google Firebase (Firebase Authentication și Cloud Firestore). Hărțile și adresele vin de la Apple Maps. Acești furnizori pot prelucra datele în afara Moldovei și a UE, conform propriilor condiții de protecție a datelor."
+            "value" : "Conturile și raportările sunt stocate în Google Firebase (Firebase Authentication și Cloud Firestore). Hărțile și adresele vin de la Apple Maps. Rapoartele despre blocări și erori ajung la Sentry și sunt stocate în UE. Acești furnizori pot prelucra datele în afara Moldovei și a UE, conform propriilor condiții de protecție a datelor."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Аккаунты и сообщения хранятся в Google Firebase (Firebase Authentication и Cloud Firestore). Карты и адреса предоставляет Apple Maps. Эти сервисы могут обрабатывать данные за пределами Молдовы и ЕС по своим условиям защиты данных."
+            "value" : "Аккаунты и сообщения хранятся в Google Firebase (Firebase Authentication и Cloud Firestore). Карты и адреса предоставляет Apple Maps. Отчёты о сбоях и ошибках отправляются в Sentry и хранятся в ЕС. Эти сервисы могут обрабатывать данные за пределами Молдовы и ЕС по своим условиям защиты данных."
           }
         }
       }
@@ -659,6 +659,22 @@
         }
       }
     },
+    "Crash reports" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rapoarte de erori"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отчёты о сбоях"
+          }
+        }
+      }
+    },
     "Create Account" : {
       "localizations" : {
         "ro" : {
@@ -879,6 +895,22 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Готово"
+          }
+        }
+      }
+    },
+    "When the app crashes, freezes or an action fails unexpectedly, RoadFix sends a technical report to Sentry so we can fix the bug: what went wrong, where in the app's code, the app version and the device model and iOS version. These reports don't include your email, your IP address, screenshots, your reports or your photos." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Când aplicația se blochează, nu mai răspunde sau o acțiune eșuează neașteptat, RoadFix trimite la Sentry un raport tehnic, ca să putem repara problema: ce nu a mers, în ce parte a codului aplicației, versiunea aplicației, modelul dispozitivului și versiunea iOS. Aceste rapoarte nu conțin emailul tău, adresa IP, capturi de ecran, raportările sau fotografiile tale."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если приложение падает, зависает или действие неожиданно не выполняется, RoadFix отправляет в Sentry технический отчёт, чтобы мы могли исправить ошибку: что пошло не так, в какой части кода приложения, версия приложения, модель устройства и версия iOS. Эти отчёты не содержат ваш email, IP-адрес, снимки экрана, ваши сообщения или фотографии."
           }
         }
       }
