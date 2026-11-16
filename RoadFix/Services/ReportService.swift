@@ -50,7 +50,7 @@ class ReportService: ObservableObject {
             guard let self, let documents = snapshot?.documents else {
                 if let error {
                     print("Reports listener error: \(error.localizedDescription)")
-                    Self.recordUnexpected(error, action: "listen to reports")
+                    CrashReporting.record(error, action: "listen to reports")
                 }
                 return
             }
@@ -144,7 +144,7 @@ class ReportService: ObservableObject {
             // A refusal here is expected (unverified email or the one-per-minute
             // limit), so only other failures are worth a Sentry report.
             if code != .permissionDenied {
-                Self.recordUnexpected(error, action: "submit report")
+                CrashReporting.record(error, action: "submit report")
             }
             completion(code == .permissionDenied
                 ? String(localized: "Your report was refused. Make sure your email is verified, and wait a minute between reports.")
@@ -251,7 +251,7 @@ class ReportService: ObservableObject {
         { [weak self] error in
             guard let error else { return }
             print("\(message) \(error.localizedDescription)")
-            Self.recordUnexpected(error, action: action)
+            CrashReporting.record(error, action: action)
             let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
             let reason = switch code {
             case .permissionDenied: String(localized: "You don't have permission to do that.")
@@ -260,14 +260,6 @@ class ReportService: ObservableObject {
             }
             self?.actionError = "\(message) \(reason)"
         }
-    }
-
-    // Sends Firestore failures to Sentry, except a lost connection: that's
-    // the user's network, not a bug in the app.
-    private static func recordUnexpected(_ error: Error, action: String) {
-        let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
-        if code == .unavailable || code == .deadlineExceeded { return }
-        CrashReporting.record(error, action: action)
     }
 
     // Firestore docs max out at 1 MiB, so shrink to 1280px on the long side

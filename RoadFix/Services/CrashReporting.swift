@@ -4,6 +4,8 @@
 //
 
 import Foundation
+import FirebaseAuth
+import FirebaseFirestore
 import Sentry
 
 /// Sends crashes, app hangs and unexpected errors to Sentry so the team
@@ -20,7 +22,9 @@ nonisolated enum CrashReporting {
     private static let dsnKey = "SENTRY_DSN"
 
     static func start() {
-        guard let dsn = configuredDSN() else { return }
+        // Unit tests launch the app too; keep their runs out of Sentry.
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil,
+              let dsn = configuredDSN() else { return }
         SentrySDK.start { options in
             options.dsn = dsn
             #if DEBUG
@@ -40,9 +44,10 @@ nonisolated enum CrashReporting {
     }
 
     /// Reports an unexpected error with a short, data-free description of
-    /// what the app was doing, e.g. "submit report".
+    /// what the app was doing, e.g. "submit report". A lost or missing
+    /// connection is skipped: that's the user's network, not a bug.
     static func record(_ error: Error, action: String) {
-        guard SentrySDK.isEnabled else { return }
+        guard SentrySDK.isEnabled, !isConnectionProblem(error) else { return }
         SentrySDK.capture(error: error) { scope in
             scope.setTag(value: action, key: "action")
         }
@@ -55,6 +60,31 @@ nonisolated enum CrashReporting {
             scope.setTag(value: action, key: "action")
             scope.setLevel(.error)
         }
+    }
+
+    static func isConnectionProblem(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        switch nsError.domain {
+        case FirestoreErrorDomain:
+            let code = FirestoreErrorCode.Code(rawValue: nsError.code)
+            if code == .unavailable || code == .deadlineExceeded { return true }
+        case AuthErrorDomain:
+            if AuthErrorCode(rawValue: nsError.code) == .networkError { return true }
+        case NSURLErrorDomain:
+            let offline: [URLError.Code] = [
+                .notConnectedToInternet, .networkConnectionLost, .timedOut,
+                .cannotConnectToHost, .cannotFindHost, .dnsLookupFailed,
+                .internationalRoamingOff, .dataNotAllowed
+            ]
+            if offline.contains(URLError.Code(rawValue: nsError.code)) { return true }
+        default:
+            break
+        }
+        // Firebase often wraps the network error that caused the failure.
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? Error {
+            return isConnectionProblem(underlying)
+        }
+        return false
     }
 
     private static func configuredDSN() -> String? {
