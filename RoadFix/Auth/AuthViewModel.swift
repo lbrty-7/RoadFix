@@ -58,7 +58,7 @@ final class AuthViewModel: ObservableObject {
     }
 
     private func fetchUserProfile(uid: String) {
-        db.collection("users").document(uid).getDocument { [weak self] snapshot, _ in
+        db.collection("users").document(uid).getDocument { [weak self] snapshot, error in
             let data = snapshot?.data()
             let email = data?["email"] as? String
             let role = data?["role"] as? String
@@ -66,6 +66,13 @@ final class AuthViewModel: ObservableObject {
                 guard let self else { return }
                 defer { self.isLoading = false }
                 guard let email, let role else {
+                    // Right after sign-up the profile doesn't exist yet, so
+                    // that case isn't a bug.
+                    if let error {
+                        CrashReporting.record(error, action: "load profile")
+                    } else if !self.isCreatingAccount {
+                        CrashReporting.record(message: "User profile missing or incomplete", action: "load profile")
+                    }
                     self.errorMessage = String(localized: "Could not load your account profile.")
                     self.currentUser = nil
                     if !self.isCreatingAccount { self.isSubmitting = false }
@@ -141,6 +148,10 @@ final class AuthViewModel: ObservableObject {
         }
         db.collection("users").document(uid).setData(data) { [weak self] error in
             let failed = error != nil
+            // A refused staff code is expected and retried as a citizen.
+            if let error, !(staffCode != nil && (error as NSError).code == FirestoreErrorCode.Code.permissionDenied.rawValue) {
+                CrashReporting.record(error, action: "create profile")
+            }
             let rejectedByRules = (error as NSError?)?.code == FirestoreErrorCode.Code.permissionDenied.rawValue
             Task { @MainActor in
                 guard let self else { return }
@@ -179,6 +190,7 @@ final class AuthViewModel: ObservableObject {
             errorMessage = nil
             finishSubmitting()
         } catch {
+            CrashReporting.record(error, action: "sign out")
             errorMessage = String(localized: "Could not sign out. Try again.")
         }
     }
@@ -258,9 +270,12 @@ final class AuthViewModel: ObservableObject {
     }
 
     // Static and nonisolated so it can run inside Firebase's Sendable callbacks.
+    // Wrong passwords, taken emails and the like are the user's input, not
+    // bugs; only errors that fall through to the generic message go to Sentry.
     private nonisolated static func mapAuthError(_ error: Error) -> String {
         let nsError = error as NSError
         guard let code = AuthErrorCode(rawValue: nsError.code) else {
+            CrashReporting.record(error, action: "account")
             return String(localized: "Something went wrong, try again.")
         }
         switch code {
@@ -280,6 +295,7 @@ final class AuthViewModel: ObservableObject {
         case .networkError:
             return String(localized: "Network error. Check your connection and try again.")
         default:
+            CrashReporting.record(error, action: "account")
             return String(localized: "Something went wrong, try again.")
         }
     }

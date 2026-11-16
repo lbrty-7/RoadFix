@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Copy this file to RoadFix/Sentry-Info.plist (git-ignored) and paste
+	     the DSN from Sentry: Settings > Projects > roadfix-ios > Client Keys (DSN).
+	     Leave it out and the app runs with Sentry turned off. -->
+	<key>SENTRY_DSN</key>
+	<string></string>
+</dict>
+</plist>

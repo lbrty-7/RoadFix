@@ -11,6 +11,8 @@ import FirebaseCore
 @main
 struct RoadFixApp: App {
     init() {
+        // First, so a crash while Firebase starts is still reported.
+        CrashReporting.start()
         FirebaseApp.configure()
     }
 
