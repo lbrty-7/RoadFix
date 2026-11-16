@@ -4,7 +4,7 @@ import Foundation
 /// Firebase's own password policy (set in the console) is the server-side
 /// check; this one gives instant feedback and blocks the most common passwords.
 enum PasswordPolicy {
-    static let minimumLength = 12
+    static let minimumLength = 8
 
     // Lowercased. The most common passwords of 12+ characters from public
     // breach lists, plus obvious app-specific ones.
