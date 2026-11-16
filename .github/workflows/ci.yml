@@ -119,6 +119,8 @@ jobs:
             -scheme RoadFix \
             -destination "id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO \
+            -clonedSourcePackagesDirPath "$SPM_DIR" \
+            -disableAutomaticPackageResolution \
             -derivedDataPath build \
             -resultBundlePath TestResults.xcresult \
             | tee test.log | grep -E "Test run with|✘|✔|recorded an issue|\*\* TEST" || true

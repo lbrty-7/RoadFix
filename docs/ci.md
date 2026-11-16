@@ -25,7 +25,7 @@ If any step fails, the run fails and the pull request shows a red ✗. Once `mai
 
 The tests themselves take about a second. Most of the run is setup:
 
-- **Swift packages:** cached between runs (key: `Package.resolved`), so they're downloaded only when a dependency changes.
+- **Swift packages:** cached between runs (key: `Package.resolved`), so they're downloaded only when a dependency changes. Every `xcodebuild` call must get `-clonedSourcePackagesDirPath` and `-disableAutomaticPackageResolution`; without them it downloads all 14 packages again into its own folder (this cost about 10 minutes per run before it was fixed).
 - **Build:** Firebase compiles from source, about two minutes.
 - **Simulator:** a cold boot takes minutes. It boots after the build, not alongside it: on the runner's few CPU cores, booting during the build slowed the build from about 2 to 16 minutes. Tests run without parallel testing, which would boot extra simulator clones for no gain on a suite this size. Beta runtimes are skipped because they boot slower and are less stable.
 
