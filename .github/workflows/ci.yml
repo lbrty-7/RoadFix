@@ -109,21 +109,23 @@ jobs:
       - name: Boot the simulator
         run: xcrun simctl bootstatus "$SIMULATOR_ID" -b
 
+      # Runs the tests from the .xctestrun file the build wrote, so xcodebuild
+      # doesn't load the project and the Swift packages a second time.
       # Parallel testing would boot extra clones of the simulator, which costs
       # minutes and gains nothing for a suite this size.
+      # The full output stays in the log (GitHub timestamps every line), so
+      # any slow phase is easy to spot.
       - name: Run tests
         run: |
           set -o pipefail
+          xctestrun=$(ls build/Build/Products/*.xctestrun | head -n 1)
+          echo "Using $xctestrun"
           xcodebuild test-without-building \
-            -project RoadFix.xcodeproj \
-            -scheme RoadFix \
+            -xctestrun "$xctestrun" \
             -destination "id=$SIMULATOR_ID" \
             -parallel-testing-enabled NO \
-            -clonedSourcePackagesDirPath "$SPM_DIR" \
-            -disableAutomaticPackageResolution \
-            -derivedDataPath build \
             -resultBundlePath TestResults.xcresult \
-            | tee test.log | grep -E "Test run with|✘|✔|recorded an issue|\*\* TEST" || true
+            2>&1 | tee test.log || true
           grep -q "TEST EXECUTE SUCCEEDED" test.log
 
       - name: Write test summary
