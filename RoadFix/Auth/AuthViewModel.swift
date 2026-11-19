@@ -229,8 +229,9 @@ final class AuthViewModel: ObservableObject {
         isEmailVerified = user.isEmailVerified
     }
 
-    // Removes everything the user created — their reports, report photos and
-    // profile — then the Firebase account itself (App Store guideline 5.1.1(v)).
+    // Removes everything the user created — their reports, report photos,
+    // their upvotes on other reports and their profile — then the Firebase
+    // account itself (App Store guideline 5.1.1(v)).
     // Signing in again first is required by Firebase to delete an account.
     func deleteAccount(password: String) async throws {
         guard let user = Auth.auth().currentUser, let email = user.email else {
@@ -251,9 +252,30 @@ final class AuthViewModel: ObservableObject {
             }
             try await batch.commit()
         }
+        try await removeUpvotes(of: user.uid)
         try await db.collection("users").document(user.uid).delete()
         try await user.delete()
         // The auth listener sees the signed-out state and shows LoginView.
+    }
+
+    // Takes the user's ID out of upvoterIds on every report they upvoted, so
+    // those reports stop counting a deleted account's vote. firestore.rules
+    // caps lists of other people's reports at 500, so this works in pages:
+    // each removed upvote drops the report from the query, and the next page
+    // picks up the rest. Each batch (at most 500 writes) is one page.
+    private func removeUpvotes(of uid: String) async throws {
+        let upvoted = db.collection("reports")
+            .whereField("upvoterIds", arrayContains: uid)
+            .limit(to: ReportService.listLimit)
+        while true {
+            let page = try await upvoted.getDocuments()
+            guard !page.documents.isEmpty else { return }
+            let batch = db.batch()
+            for document in page.documents {
+                batch.updateData(["upvoterIds": FieldValue.arrayRemove([uid])], forDocument: document.reference)
+            }
+            try await batch.commit()
+        }
     }
 
     nonisolated static func changePasswordErrorMessage(_ error: Error) -> String {
