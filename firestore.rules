@@ -57,7 +57,7 @@ service cloud.firestore {
     match /reports/{reportId} {
       // Lists are capped (ReportService.listLimit) so the whole collection
       // can't be scraped in one request. A user's own reports can always be
-      // listed in full, which deleting an account needs.
+      // listed in full, which My Reports and deleting an account need.
       allow get: if isSignedIn();
       allow list: if isSignedIn()
                   && (request.query.limit <= 500 || resource.data.reporterId == request.auth.uid);
