@@ -204,7 +204,7 @@ private struct EditReportView: View {
     }
 
     private var trimmedDescription: String {
-        description.trimmingCharacters(in: .whitespacesAndNewlines)
+        ReportService.cleanedDescription(description)
     }
 
     var body: some View {

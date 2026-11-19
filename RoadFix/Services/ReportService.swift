@@ -110,7 +110,7 @@ class ReportService: ObservableObject {
         let photoData = image.flatMap(Self.compressedJPEG)
         var data: [String: Any] = [
             "category": category.rawValue,
-            "description": description,
+            "description": Self.cleanedDescription(description),
             "latitude": coordinate.latitude,
             "longitude": coordinate.longitude,
             "status": ReportStatus.reported.rawValue,
@@ -225,8 +225,15 @@ class ReportService: ObservableObject {
     func updateReport(_ report: Report, category: ReportCategory, description: String) {
         reportsCollection.document(report.id).updateData([
             "category": category.rawValue,
-            "description": description
+            "description": Self.cleanedDescription(description)
         ], completion: failureHandler(String(localized: "Couldn't save your changes.")))
+    }
+
+    // A description is saved without the spaces and blank lines around it,
+    // both for new reports and edits. The forms use the same check to keep
+    // Submit and Save off while only whitespace is typed.
+    static func cleanedDescription(_ text: String) -> String {
+        text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // Staff can delete any report; reporters can withdraw their own. The
