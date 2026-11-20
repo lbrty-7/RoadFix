@@ -8,7 +8,7 @@ struct ContentView: View {
     // The user's reports whose status staff changed since they last looked.
     private var updatedReportCount: Int {
         guard let uid = authViewModel.currentUser?.id else { return 0 }
-        return reportService.reports.filter { $0.reporterId == uid && reportService.hasUnseenUpdate($0) }.count
+        return reportService.myReports.filter { $0.reporterId == uid && reportService.hasUnseenUpdate($0) }.count
     }
 
     var body: some View {

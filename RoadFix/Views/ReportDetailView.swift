@@ -10,9 +10,10 @@ struct ReportDetailView: View {
     @State private var confirmWithdraw = false
 
     // Looked up live (not captured as a copy) so upvotes and status changes
-    // show up while the sheet is open.
+    // show up while the sheet is open. Older reports of the user's own that
+    // aren't in the city list come from myReports.
     private var report: Report? {
-        reportService.reports.first { $0.id == reportID }
+        reportService.report(withID: reportID)
     }
 
     private var isStaff: Bool { authViewModel.currentUser?.isStaff == true }
@@ -204,7 +205,7 @@ private struct EditReportView: View {
     }
 
     private var trimmedDescription: String {
-        description.trimmingCharacters(in: .whitespacesAndNewlines)
+        ReportService.cleanedDescription(description)
     }
 
     var body: some View {

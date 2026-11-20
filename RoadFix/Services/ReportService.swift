@@ -8,6 +8,10 @@ import FirebaseFirestore
 
 class ReportService: ObservableObject {
     @Published var reports: [Report] = []
+    // Every report the signed-in user filed, newest first. Loaded by its own
+    // listener because `reports` stops at the newest listLimit in the city,
+    // which would hide a user's older reports from My Reports.
+    @Published var myReports: [Report] = []
     // Set when a write fails; ContentView shows it and clears it.
     @Published var actionError: String?
     // The status each of the user's reports had when they last opened it,
@@ -17,6 +21,7 @@ class ReportService: ObservableObject {
 
     private let db = Firestore.firestore()
     private var listener: ListenerRegistration?
+    private var myReportsListener: ListenerRegistration?
     private let photoCache = NSCache<NSString, UIImage>()
     private var addressCache: [String: String] = [:]
     private static let maxPhotoBytes = 900 * 1024
@@ -38,8 +43,9 @@ class ReportService: ObservableObject {
         db.collection("reportPhotos")
     }
 
-    // Live-syncs every report so the map, dashboard and "My Reports" update
-    // as soon as anyone submits, upvotes or changes a status.
+    // Live-syncs the newest reports (map, dashboard) and all of the user's
+    // own reports (My Reports) so they update as soon as anyone submits,
+    // upvotes or changes a status.
     func startListening() {
         guard listener == nil else { return }
         loadSeenStatuses()
@@ -54,15 +60,49 @@ class ReportService: ObservableObject {
                 }
                 return
             }
-            self.reports = documents
-                .compactMap { Self.report(id: $0.documentID, data: $0.data(with: .estimate)) }
-                .sorted { $0.createdAt > $1.createdAt }
+            self.reports = Self.newestFirst(documents)
+        }
+        listenToMyReports()
+    }
+
+    // The user's own reports, with no limit: firestore.rules lets anyone list
+    // all of their own reports. There's no order(by:) because combining it
+    // with the reporterId filter would need a composite index; sorting a
+    // single user's reports on the device is cheap.
+    private func listenToMyReports() {
+        guard myReportsListener == nil, let uid = Auth.auth().currentUser?.uid else { return }
+        myReportsListener = reportsCollection
+            .whereField("reporterId", isEqualTo: uid)
+            .addSnapshotListener { [weak self] snapshot, error in
+            guard let self, let documents = snapshot?.documents else {
+                if let error {
+                    print("My reports listener error: \(error.localizedDescription)")
+                    CrashReporting.record(error, action: "listen to my reports")
+                }
+                return
+            }
+            self.myReports = Self.newestFirst(documents)
         }
     }
 
     func stopListening() {
         listener?.remove()
         listener = nil
+        myReportsListener?.remove()
+        myReportsListener = nil
+        myReports = []
+    }
+
+    /// A report from the city list or, for an older one of the user's own
+    /// reports that isn't in it, from myReports.
+    func report(withID id: String) -> Report? {
+        reports.first { $0.id == id } ?? myReports.first { $0.id == id }
+    }
+
+    private static func newestFirst(_ documents: [QueryDocumentSnapshot]) -> [Report] {
+        documents
+            .compactMap { report(id: $0.documentID, data: $0.data(with: .estimate)) }
+            .sorted { $0.createdAt > $1.createdAt }
     }
 
     // MARK: Status updates seen by the reporter
@@ -110,7 +150,7 @@ class ReportService: ObservableObject {
         let photoData = image.flatMap(Self.compressedJPEG)
         var data: [String: Any] = [
             "category": category.rawValue,
-            "description": description,
+            "description": Self.cleanedDescription(description),
             "latitude": coordinate.latitude,
             "longitude": coordinate.longitude,
             "status": ReportStatus.reported.rawValue,
@@ -225,8 +265,15 @@ class ReportService: ObservableObject {
     func updateReport(_ report: Report, category: ReportCategory, description: String) {
         reportsCollection.document(report.id).updateData([
             "category": category.rawValue,
-            "description": description
+            "description": Self.cleanedDescription(description)
         ], completion: failureHandler(String(localized: "Couldn't save your changes.")))
+    }
+
+    // A description is saved without the spaces and blank lines around it,
+    // both for new reports and edits. The forms use the same check to keep
+    // Submit and Save off while only whitespace is typed.
+    static func cleanedDescription(_ text: String) -> String {
+        text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // Staff can delete any report; reporters can withdraw their own. The

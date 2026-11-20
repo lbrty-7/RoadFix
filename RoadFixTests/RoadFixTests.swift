@@ -117,6 +117,22 @@ struct ReportParsingTests {
     }
 }
 
+@Suite("Report description")
+struct ReportDescriptionTests {
+    @Test func trimsSpacesAndBlankLinesAroundTheText() {
+        #expect(ReportService.cleanedDescription("Large pothole near the tram stop.  ") == "Large pothole near the tram stop.")
+        #expect(ReportService.cleanedDescription("\n\n  Light is out\t\n") == "Light is out")
+    }
+
+    @Test func keepsLineBreaksAndSpacesInsideTheText() {
+        #expect(ReportService.cleanedDescription(" Deep hole.\n\nNear the  crossing. ") == "Deep hole.\n\nNear the  crossing.")
+    }
+
+    @Test func whitespaceOnlyBecomesEmpty() {
+        #expect(ReportService.cleanedDescription(" \n\t ").isEmpty)
+    }
+}
+
 @Suite("Photo compression")
 struct PhotoCompressionTests {
     private func noisyImage(width: Int, height: Int) -> UIImage {

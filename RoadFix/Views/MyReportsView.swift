@@ -7,7 +7,7 @@ struct MyReportsView: View {
 
     private var myReports: [Report] {
         guard let uid = authViewModel.currentUser?.id else { return [] }
-        return reportService.reports.filter { $0.reporterId == uid }
+        return reportService.myReports.filter { $0.reporterId == uid }
     }
 
     var body: some View {

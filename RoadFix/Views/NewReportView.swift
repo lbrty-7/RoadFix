@@ -207,7 +207,7 @@ struct NewReportView: View {
                     Button(isSubmitting ? "Submitting…" : "Submit") {
                         submit()
                     }
-                    .disabled(description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    .disabled(ReportService.cleanedDescription(description).isEmpty
                               || pinnedLocation == nil || isSubmitting || !authViewModel.isEmailVerified)
                 }
             }
