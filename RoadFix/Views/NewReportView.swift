@@ -19,6 +19,8 @@ struct NewReportView: View {
     @State private var showCamera = false
     @State private var isSubmitting = false
     @State private var submitError: String?
+    // No connection: Firestore keeps the report and sends it later.
+    @State private var showSavedOffline = false
     @State private var verificationMessage: String?
     @State private var isCheckingVerification = false
     // Where the report will be filed. Starts at the user's location and
@@ -26,7 +28,22 @@ struct NewReportView: View {
     @State private var pinnedLocation: CLLocationCoordinate2D?
     @State private var pinFollowsCurrentLocation = true
     @State private var pinAddress: String?
-    @State private var mapPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    // Without location access, start on the city rather than the whole
+    // country, so a tapped pin lands close to where the user meant.
+    @State private var mapPosition: MapCameraPosition = .userLocation(fallback: .region(NewReportView.cityRegion))
+    @State private var confirmDiscard = false
+
+    // Central Chișinău, about 6 km across.
+    private static let cityRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 47.0245, longitude: 28.8322),
+        latitudinalMeters: 6000,
+        longitudinalMeters: 6000
+    )
+
+    // Anything the user would lose by closing the sheet.
+    private var hasInput: Bool {
+        !ReportService.cleanedDescription(description).isEmpty || selectedImage != nil
+    }
 
     private var locationDenied: Bool {
         locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
@@ -106,9 +123,8 @@ struct NewReportView: View {
                     TextField("What's the issue?", text: $description, axis: .vertical)
                         .lineLimit(3...6)
                         .onChange(of: description) { _, newValue in
-                            if newValue.count > ReportService.maxDescriptionLength {
-                                description = String(newValue.prefix(ReportService.maxDescriptionLength))
-                            }
+                            let limited = ReportService.limited(newValue, to: ReportService.maxDescriptionLength)
+                            if limited != newValue { description = limited }
                         }
                 }
 
@@ -199,9 +215,17 @@ struct NewReportView: View {
                 ReportDetailView(reportID: report.id, reportService: reportService)
             }
             .navigationTitle("New Report")
+            // Swiping the sheet down would lose the report; Cancel asks first.
+            .interactiveDismissDisabled(hasInput)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        if hasInput { confirmDiscard = true } else { dismiss() }
+                    }
+                    .confirmationDialog("Discard this report?", isPresented: $confirmDiscard, titleVisibility: .visible) {
+                        Button("Discard Report", role: .destructive) { dismiss() }
+                        Button("Keep Editing", role: .cancel) {}
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isSubmitting ? "Submitting…" : "Submit") {
@@ -225,6 +249,11 @@ struct NewReportView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(submitError ?? "")
+            }
+            .alert("Saved Offline", isPresented: $showSavedOffline) {
+                Button("OK") { dismiss() }
+            } message: {
+                Text("Your report is saved on this phone and will be sent when you're back online. My Reports shows it as Waiting to Send until then.")
             }
         }
     }
@@ -258,12 +287,12 @@ struct NewReportView: View {
             image: selectedImage,
             coordinate: coordinate,
             address: pinAddress
-        ) { errorMessage in
+        ) { outcome in
             isSubmitting = false
-            if let errorMessage {
-                submitError = errorMessage
-            } else {
-                dismiss()
+            switch outcome {
+            case .sent: dismiss()
+            case .queued: showSavedOffline = true
+            case .failed(let message): submitError = message
             }
         }
     }

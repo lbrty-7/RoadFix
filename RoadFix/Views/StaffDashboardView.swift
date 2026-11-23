@@ -26,7 +26,7 @@ struct StaffDashboardView: View {
                 } label: {
                     HStack(alignment: .top, spacing: 12) {
                         if report.hasPhoto {
-                            ReportPhotoView(reportID: report.id, reportService: reportService)
+                            ReportPhotoView(reportID: report.id, reportService: reportService, size: .thumbnail)
                                 .frame(width: 64, height: 64)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
@@ -61,15 +61,7 @@ struct StaffDashboardView: View {
                 .buttonStyle(.borderless)
                 .foregroundStyle(.primary)
 
-                Picker("Status", selection: Binding(
-                    get: { report.status },
-                    set: { newStatus in reportService.updateStatus(report, to: newStatus) }
-                )) {
-                    ForEach(ReportStatus.allCases, id: \.self) { status in
-                        Text(status.title).tag(status)
-                    }
-                }
-                .pickerStyle(.segmented)
+                StatusPicker(report: report, reportService: reportService)
             }
             .padding(.vertical, 4)
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {

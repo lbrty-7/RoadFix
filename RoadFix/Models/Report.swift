@@ -61,6 +61,7 @@ struct Report: Identifiable, Equatable {
     var createdAt: Date
     var staffNote: String? = nil          // public note from staff
     var statusHistory: [StatusChange] = [] // oldest first; empty on older reports
+    var isPending = false                  // saved on the phone, not on the server yet
 
     var upvoteCount: Int { upvoterIds.count }
 

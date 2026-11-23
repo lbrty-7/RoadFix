@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
     @State private var locationStatus: CLAuthorizationStatus = .notDetermined
+    @State private var confirmSignOut = false
 
     private var locationStatusText: String {
         switch locationStatus {
@@ -59,8 +60,9 @@ struct SettingsView: View {
 
             Section {
                 Button("Sign Out", role: .destructive) {
-                    authViewModel.signOut()
+                    confirmSignOut = true
                 }
+                .signOutConfirmation(isPresented: $confirmSignOut, authViewModel: authViewModel)
             }
 
             Section {
@@ -81,5 +83,17 @@ struct SettingsView: View {
 
     private func refreshLocationStatus() {
         locationStatus = CLLocationManager().authorizationStatus
+    }
+}
+
+extension View {
+    /// Asks before signing out, from Settings and from the map's account menu.
+    func signOutConfirmation(isPresented: Binding<Bool>, authViewModel: AuthViewModel) -> some View {
+        confirmationDialog("Sign out of RoadFix?", isPresented: isPresented, titleVisibility: .visible) {
+            Button("Sign Out", role: .destructive) {
+                authViewModel.signOut()
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
 }
