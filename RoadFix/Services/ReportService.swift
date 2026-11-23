@@ -6,6 +6,37 @@ import Combine
 import FirebaseAuth
 import FirebaseFirestore
 
+/// What happened to a new report when New Report can close.
+enum SubmitOutcome: Equatable {
+    case sent
+    // Saved on the phone; Firestore sends it when the connection is back.
+    case queued
+    case failed(String)
+
+    var isFailure: Bool {
+        if case .failed = self { return true }
+        return false
+    }
+}
+
+/// Calls a submit completion once: whichever comes first of the server's
+/// answer, no connection, or the offlineGrace timeout.
+final class PendingSubmit {
+    private var completion: ((SubmitOutcome) -> Void)?
+
+    init(_ completion: @escaping (SubmitOutcome) -> Void) {
+        self.completion = completion
+    }
+
+    var isFinished: Bool { completion == nil }
+
+    func finish(_ outcome: SubmitOutcome) {
+        let completion = completion
+        self.completion = nil
+        completion?(outcome)
+    }
+}
+
 class ReportService: ObservableObject {
     @Published var reports: [Report] = []
     // Every report the signed-in user filed, newest first. Loaded by its own
@@ -30,6 +61,10 @@ class ReportService: ObservableObject {
     static let maxDescriptionLength = 1000
     static let maxStaffNoteLength = 500
     static let minSecondsBetweenReports: TimeInterval = 60
+    // How long Submit waits for the server before telling the user the
+    // report is saved and will be sent later.
+    static let offlineGrace: Duration = .seconds(5)
+    private let connection = ConnectionMonitor()
     // The live listener loads at most this many (newest) reports, and
     // firestore.rules refuses larger lists so nobody can dump the collection.
     static let listLimit = 500
@@ -68,12 +103,14 @@ class ReportService: ObservableObject {
     // The user's own reports, with no limit: firestore.rules lets anyone list
     // all of their own reports. There's no order(by:) because combining it
     // with the reporterId filter would need a composite index; sorting a
-    // single user's reports on the device is cheap.
+    // single user's reports on the device is cheap. Metadata changes are
+    // included so a report saved offline flips from "Waiting to Send" once
+    // the server has it.
     private func listenToMyReports() {
         guard myReportsListener == nil, let uid = Auth.auth().currentUser?.uid else { return }
         myReportsListener = reportsCollection
             .whereField("reporterId", isEqualTo: uid)
-            .addSnapshotListener { [weak self] snapshot, error in
+            .addSnapshotListener(includeMetadataChanges: true) { [weak self] snapshot, error in
             guard let self, let documents = snapshot?.documents else {
                 if let error {
                     print("My reports listener error: \(error.localizedDescription)")
@@ -101,7 +138,11 @@ class ReportService: ObservableObject {
 
     private static func newestFirst(_ documents: [QueryDocumentSnapshot]) -> [Report] {
         documents
-            .compactMap { report(id: $0.documentID, data: $0.data(with: .estimate)) }
+            .compactMap { document in
+                var parsed = report(id: document.documentID, data: document.data(with: .estimate))
+                parsed?.isPending = document.metadata.hasPendingWrites
+                return parsed
+            }
             .sorted { $0.createdAt > $1.createdAt }
     }
 
@@ -134,16 +175,16 @@ class ReportService: ObservableObject {
         image: UIImage?,
         coordinate: CLLocationCoordinate2D,
         address: String?,
-        completion: @escaping (_ errorMessage: String?) -> Void
+        completion: @escaping (SubmitOutcome) -> Void
     ) {
         guard let uid = Auth.auth().currentUser?.uid else {
-            completion(String(localized: "You're signed out. Sign in and try again."))
+            completion(.failed(String(localized: "You're signed out. Sign in and try again.")))
             return
         }
         // firestore.rules enforces the same wait; checking here first gives a
         // clear message instead of a generic permission error.
         if let lastSubmittedAt, Date().timeIntervalSince(lastSubmittedAt) < Self.minSecondsBetweenReports {
-            completion(String(localized: "You can send one report per minute. Wait a moment and try again."))
+            completion(.failed(String(localized: "You can send one report per minute. Wait a moment and try again.")))
             return
         }
         let document = reportsCollection.document()
@@ -173,23 +214,53 @@ class ReportService: ObservableObject {
         if let photoData {
             batch.setData(["data": photoData], forDocument: photosCollection.document(document.documentID))
         }
-        batch.commit { [weak self] error in
-            guard let error else {
+        commit(batch, completion: completion)
+    }
+
+    // batch.commit only calls back once the server confirms, which offline
+    // can take minutes. Firestore keeps the write and sends it when the
+    // connection is back, so the form is told the report is queued: at once
+    // when there's no connection, or after offlineGrace when the server is
+    // slow to answer. A refusal that arrives after that shows as actionError.
+    private func commit(_ batch: WriteBatch, completion: @escaping (SubmitOutcome) -> Void) {
+        let submit = PendingSubmit { [weak self] outcome in
+            // A queued report counts too: the rules check the wait when it
+            // reaches the server, so a second one sent offline would fail.
+            if !outcome.isFailure {
                 self?.lastSubmittedAt = Date()
-                completion(nil)
-                return
             }
-            print("Submit report error: \(error.localizedDescription)")
-            let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
-            // A refusal here is expected (unverified email or the one-per-minute
-            // limit), so only other failures are worth a Sentry report.
-            if code != .permissionDenied {
-                CrashReporting.record(error, action: "submit report")
-            }
-            completion(code == .permissionDenied
-                ? String(localized: "Your report was refused. Make sure your email is verified, and wait a minute between reports.")
-                : String(localized: "Check your connection and try again."))
+            completion(outcome)
         }
+        batch.commit { [weak self] error in
+            guard let error else { return submit.finish(.sent) }
+            let message = Self.submitErrorMessage(for: error)
+            if submit.isFinished {
+                self?.actionError = message
+            } else {
+                submit.finish(.failed(message))
+            }
+        }
+        if !connection.isOnline {
+            submit.finish(.queued)
+        } else {
+            Task {
+                try? await Task.sleep(for: Self.offlineGrace)
+                submit.finish(.queued)
+            }
+        }
+    }
+
+    private static func submitErrorMessage(for error: Error) -> String {
+        print("Submit report error: \(error.localizedDescription)")
+        let code = FirestoreErrorCode.Code(rawValue: (error as NSError).code)
+        // A refusal here is expected (unverified email or the one-per-minute
+        // limit), so only other failures are worth a Sentry report.
+        if code != .permissionDenied {
+            CrashReporting.record(error, action: "submit report")
+        }
+        return code == .permissionDenied
+            ? String(localized: "Your report was refused. Make sure your email is verified, and wait a minute between reports.")
+            : String(localized: "Check your connection and try again.")
     }
 
     // Reports store their address when filed; older ones are looked up once

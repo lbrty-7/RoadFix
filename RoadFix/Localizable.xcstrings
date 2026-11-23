@@ -899,6 +899,38 @@
         }
       }
     },
+    "Saved Offline" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvată offline"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранено офлайн"
+          }
+        }
+      }
+    },
+    "Waiting to Send" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Așteaptă trimiterea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ожидает отправки"
+          }
+        }
+      }
+    },
     "When the app crashes, freezes or an action fails unexpectedly, RoadFix sends a technical report to Sentry so we can fix the bug: what went wrong, where in the app's code, the app version and the device model and iOS version. These reports don't include your email, your IP address, screenshots, your reports or your photos." : {
       "localizations" : {
         "ro" : {
@@ -3281,6 +3313,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ваши фото и тексты"
+          }
+        }
+      }
+    },
+    "Your report is saved on this phone and will be sent when you're back online. My Reports shows it as Waiting to Send until then." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesizarea este salvată pe acest telefon și va fi trimisă când reveniți online. Până atunci, în Sesizările mele apare ca Așteaptă trimiterea."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заявка сохранена на этом телефоне и будет отправлена, когда появится подключение. До этого в разделе «Мои заявки» она отмечена как «Ожидает отправки»."
           }
         }
       }

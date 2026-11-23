@@ -19,6 +19,8 @@ struct NewReportView: View {
     @State private var showCamera = false
     @State private var isSubmitting = false
     @State private var submitError: String?
+    // No connection: Firestore keeps the report and sends it later.
+    @State private var showSavedOffline = false
     @State private var verificationMessage: String?
     @State private var isCheckingVerification = false
     // Where the report will be filed. Starts at the user's location and
@@ -226,6 +228,11 @@ struct NewReportView: View {
             } message: {
                 Text(submitError ?? "")
             }
+            .alert("Saved Offline", isPresented: $showSavedOffline) {
+                Button("OK") { dismiss() }
+            } message: {
+                Text("Your report is saved on this phone and will be sent when you're back online. My Reports shows it as Waiting to Send until then.")
+            }
         }
     }
 
@@ -258,12 +265,12 @@ struct NewReportView: View {
             image: selectedImage,
             coordinate: coordinate,
             address: pinAddress
-        ) { errorMessage in
+        ) { outcome in
             isSubmitting = false
-            if let errorMessage {
-                submitError = errorMessage
-            } else {
-                dismiss()
+            switch outcome {
+            case .sent: dismiss()
+            case .queued: showSavedOffline = true
+            case .failed(let message): submitError = message
             }
         }
     }

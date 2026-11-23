@@ -76,7 +76,11 @@ private struct MyReportRow: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 6) {
-                if reportService.hasUnseenUpdate(report) {
+                if report.isPending {
+                    Label("Waiting to Send", systemImage: "icloud.and.arrow.up")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.secondary)
+                } else if reportService.hasUnseenUpdate(report) {
                     Label("Updated", systemImage: "circle.fill")
                         .font(.caption2.bold())
                         .foregroundStyle(.blue)
