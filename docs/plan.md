@@ -224,12 +224,13 @@ Every issue is in the [Internship evaluation](https://github.com/lbrty-7/RoadFix
 - [x] [#24](https://github.com/lbrty-7/RoadFix/issues/24) My Reports misses older reports
 - [ ] [#25](https://github.com/lbrty-7/RoadFix/issues/25) UX improvements found while testing
 
-### E. Monitoring and documentation (0 of 5 done)
+### E. Monitoring and documentation (0 of 6 done)
 - [ ] [#8](https://github.com/lbrty-7/RoadFix/issues/8) Replace `print` with structured logging
 - [ ] [#9](https://github.com/lbrty-7/RoadFix/issues/9) Show the exact location and cause of errors in Sentry
 - [ ] [#10](https://github.com/lbrty-7/RoadFix/issues/10) Investigate the app hang at launch reported by Sentry
 - [ ] [#12](https://github.com/lbrty-7/RoadFix/issues/12) README with setup, tests, CI/CD and architecture
 - [ ] [#29](https://github.com/lbrty-7/RoadFix/issues/29) This app plan
+- [ ] [#32](https://github.com/lbrty-7/RoadFix/issues/32) Split functions and views longer than 30 lines
 
 **Suggested order:** B first, because those are security holes in data that's already live. Then C and D (bugs users see), then the rest of A (release automation before v1.0.0), and E last, so the documentation describes the final app.
 
