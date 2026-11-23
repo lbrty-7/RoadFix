@@ -158,5 +158,21 @@ service cloud.firestore {
                      (userRole() == "staff" ||
                       get(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid);
     }
+
+    // A small copy of the photo for the staff dashboard rows, written and
+    // deleted with the report and its photo, under the same rules. Size
+    // limit matches maxThumbnailBytes in the app.
+    match /reportThumbnails/{reportId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+                    && getAfter(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid
+                    && request.resource.data.keys().hasOnly(['data'])
+                    && request.resource.data.data is bytes
+                    && request.resource.data.data.size() < 50 * 1024;
+      allow update: if false;
+      allow delete: if isSignedIn() &&
+                     (userRole() == "staff" ||
+                      get(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid);
+    }
   }
 }

@@ -15,6 +15,13 @@ struct MapView: View {
         reportService.reports.filter { visibleStatuses.contains($0.status) && visibleCategories.contains($0.category) }
     }
 
+    // Nearby reports grouped into one pin; updated when the map stops moving.
+    @State private var clusterCellSize = 0.01
+
+    private var clusters: [ReportCluster] {
+        ReportCluster.group(visibleReports, cellSize: clusterCellSize)
+    }
+
     private var isFiltered: Bool {
         visibleStatuses != [.reported, .inProgress] || visibleCategories.count != ReportCategory.allCases.count
     }
@@ -23,21 +30,25 @@ struct MapView: View {
         ZStack(alignment: .bottomTrailing) {
             Map(position: $cameraPosition) {
                 UserAnnotation()
-                ForEach(visibleReports) { report in
-                    Annotation(report.category.title, coordinate: report.coordinate) {
-                        Button {
-                            selectedReport = report
-                        } label: {
-                            Image(systemName: report.category.systemImage)
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundStyle(.white)
-                                .padding(8)
-                                .background(report.status.color)
-                                .clipShape(Circle())
+                // The icons and colors already say what each pin is; text
+                // labels under every pin cluttered the map, so the titles
+                // are hidden (VoiceOver still reads the button labels).
+                ForEach(clusters) { cluster in
+                    if cluster.reports.count == 1 {
+                        Annotation(cluster.reports[0].category.title, coordinate: cluster.coordinate) {
+                            reportPin(cluster.reports[0])
                         }
-                        .accessibilityLabel("\(report.category.title), \(report.status.title)")
+                        .annotationTitles(.hidden)
+                    } else {
+                        Annotation("Reports here: \(cluster.reports.count)", coordinate: cluster.coordinate) {
+                            clusterPin(cluster)
+                        }
+                        .annotationTitles(.hidden)
                     }
                 }
+            }
+            .onMapCameraChange(frequency: .onEnd) { context in
+                clusterCellSize = ReportCluster.cellSize(forLatitudeSpan: context.region.span.latitudeDelta)
             }
             // Draw the map under the title bar instead of stopping below it.
             .ignoresSafeArea(edges: .top)
@@ -104,6 +115,49 @@ struct MapView: View {
         // Keep the menu open while toggling several options.
         .menuActionDismissBehavior(.disabled)
         .accessibilityLabel("Filter Reports")
+    }
+
+    private func reportPin(_ report: Report) -> some View {
+        Button {
+            selectedReport = report
+        } label: {
+            Image(systemName: report.category.systemImage)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.white)
+                .padding(8)
+                .background(report.status.color)
+                .clipShape(Circle())
+        }
+        .accessibilityLabel("\(report.category.title), \(report.status.title)")
+    }
+
+    // Tapping a group zooms in until its reports separate.
+    private func clusterPin(_ cluster: ReportCluster) -> some View {
+        Button {
+            zoom(into: cluster)
+        } label: {
+            Text("\(cluster.reports.count)")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(minWidth: 34, minHeight: 34)
+                .background(Color.accentColor, in: .circle)
+                .overlay(Circle().strokeBorder(.white, lineWidth: 2))
+        }
+        .accessibilityLabel("Reports here: \(cluster.reports.count)")
+    }
+
+    private func zoom(into cluster: ReportCluster) {
+        let latitudes = cluster.reports.map(\.latitude)
+        let longitudes = cluster.reports.map(\.longitude)
+        // Twice the group's extent, and at least close enough that the
+        // reports are drawn one by one (see ReportCluster.cellSize).
+        let span = MKCoordinateSpan(
+            latitudeDelta: max(((latitudes.max() ?? 0) - (latitudes.min() ?? 0)) * 2, 0.004),
+            longitudeDelta: max(((longitudes.max() ?? 0) - (longitudes.min() ?? 0)) * 2, 0.004)
+        )
+        withAnimation {
+            cameraPosition = .region(MKCoordinateRegion(center: cluster.coordinate, span: span))
+        }
     }
 
     private func mapButtonIcon(_ systemName: String) -> some View {

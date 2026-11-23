@@ -355,6 +355,22 @@
         }
       }
     },
+    "Change the status?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schimbați starea?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить статус?"
+          }
+        }
+      }
+    },
     "Changes" : {
       "localizations" : {
         "ro" : {
@@ -867,6 +883,38 @@
         }
       }
     },
+    "Discard Report" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renunțați la sesizare"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не сохранять заявку"
+          }
+        }
+      }
+    },
+    "Discard this report?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renunțați la această sesizare?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отказаться от этой заявки?"
+          }
+        }
+      }
+    },
     "Don't use your email address in your password." : {
       "localizations" : {
         "ro" : {
@@ -899,6 +947,86 @@
         }
       }
     },
+    "Everyone will see this report as %@." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toată lumea va vedea această sesizare ca %@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все увидят эту заявку со статусом «%@»."
+          }
+        }
+      }
+    },
+    "Keep Editing" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuați editarea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжить редактирование"
+          }
+        }
+      }
+    },
+    "Mark as %@" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcați ca %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отметить как «%@»"
+          }
+        }
+      }
+    },
+    "Note saved" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nota a fost salvată"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Примечание сохранено"
+          }
+        }
+      }
+    },
+    "Reports here: %lld" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesizări aici: %lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заявок здесь: %lld"
+          }
+        }
+      }
+    },
     "Saved Offline" : {
       "localizations" : {
         "ro" : {
@@ -911,6 +1039,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сохранено офлайн"
+          }
+        }
+      }
+    },
+    "Sign out of RoadFix?" : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vă deconectați de la RoadFix?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти из RoadFix?"
+          }
+        }
+      }
+    },
+    "This photo is too large to send. Choose another photo or remove it." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Această fotografie este prea mare pentru a fi trimisă. Alegeți altă fotografie sau eliminați-o."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Эта фотография слишком большая для отправки. Выберите другую или удалите её."
           }
         }
       }
@@ -3173,18 +3333,18 @@
         }
       }
     },
-    "You can send one report per minute. Wait a moment and try again." : {
+    "You can send one report per minute. Try again in %lld s." : {
       "localizations" : {
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Poți trimite o raportare pe minut. Așteaptă puțin și încearcă din nou."
+            "value" : "Puteți trimite o sesizare pe minut. Încercați din nou peste %lld s."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Можно отправлять одно сообщение в минуту. Подождите немного и попробуйте снова."
+            "value" : "Можно отправлять одну заявку в минуту. Попробуйте снова через %lld с."
           }
         }
       }

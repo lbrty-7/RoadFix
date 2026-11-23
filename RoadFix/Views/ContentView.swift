@@ -4,6 +4,7 @@ struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var reportService = ReportService()
     @State private var showingNewReport = false
+    @State private var confirmSignOut = false
 
     // The user's reports whose status staff changed since they last looked.
     private var updatedReportCount: Int {
@@ -83,7 +84,7 @@ struct ContentView: View {
                 Text(user.isStaff ? "Role: Staff" : "Role: Citizen")
             }
             Button("Sign Out", role: .destructive) {
-                authViewModel.signOut()
+                confirmSignOut = true
             }
         } label: {
             Image(systemName: "person.crop.circle")
@@ -95,6 +96,7 @@ struct ContentView: View {
         }
         .tint(.primary)
         .accessibilityLabel("Account")
+        .signOutConfirmation(isPresented: $confirmSignOut, authViewModel: authViewModel)
     }
 }
 

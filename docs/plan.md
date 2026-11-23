@@ -115,9 +115,10 @@ The app keeps a live connection (a Firestore *listener*) to the newest 500 repor
 | `users` | Account | `email`, `role` (`citizen` or `staff`), `createdAt`, `termsAcceptedAt`, `lastReportAt`, `staffCode` (staff only) |
 | `reports` | Report | `category`, `description`, `latitude`, `longitude`, `address`, `status`, `upvoterIds`, `reporterId`, `hasPhoto`, `createdAt`, `staffNote`, `statusHistory` |
 | `reportPhotos` | Report with a photo | `data`: the JPEG, under 900 KB (same ID as its report) |
+| `reportThumbnails` | Report with a photo | `data`: a 192 px JPEG, under 50 KB, for the staff dashboard rows (same ID as its report; older reports have none) |
 | `config` | Setting | `staffInviteCode`: the staff code; the app can never read it |
 
-Photos are kept apart from reports so the live map doesn't download every photo; a photo is loaded only when a report is opened.
+Photos are kept apart from reports so the live map doesn't download every photo; a photo is loaded only when a report is opened. The dashboard list loads the small thumbnail instead.
 
 ## 5. Security and privacy
 

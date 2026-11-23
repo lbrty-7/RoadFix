@@ -243,12 +243,17 @@ final class AuthViewModel: ObservableObject {
         let reports = try await db.collection("reports")
             .whereField("reporterId", isEqualTo: user.uid)
             .getDocuments()
-        // A batch holds at most 500 writes; each report is 2 (report + photo).
-        for chunk in stride(from: 0, to: reports.documents.count, by: 200) {
+        // Each report is 3 deletes (report, photo and thumbnail). The rules
+        // look up the report for each photo and thumbnail, and Firestore
+        // allows 20 lookups per batch (the user's profile is one), so a batch
+        // of 20 or more reports is refused. 15 leaves a margin.
+        let reportsPerBatch = 15
+        for chunk in stride(from: 0, to: reports.documents.count, by: reportsPerBatch) {
             let batch = db.batch()
-            for document in reports.documents[chunk..<min(chunk + 200, reports.documents.count)] {
+            for document in reports.documents[chunk..<min(chunk + reportsPerBatch, reports.documents.count)] {
                 batch.deleteDocument(document.reference)
                 batch.deleteDocument(db.collection("reportPhotos").document(document.documentID))
+                batch.deleteDocument(db.collection("reportThumbnails").document(document.documentID))
             }
             try await batch.commit()
         }

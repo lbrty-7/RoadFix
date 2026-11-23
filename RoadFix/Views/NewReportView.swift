@@ -28,7 +28,22 @@ struct NewReportView: View {
     @State private var pinnedLocation: CLLocationCoordinate2D?
     @State private var pinFollowsCurrentLocation = true
     @State private var pinAddress: String?
-    @State private var mapPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    // Without location access, start on the city rather than the whole
+    // country, so a tapped pin lands close to where the user meant.
+    @State private var mapPosition: MapCameraPosition = .userLocation(fallback: .region(NewReportView.cityRegion))
+    @State private var confirmDiscard = false
+
+    // Central Chișinău, about 6 km across.
+    private static let cityRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 47.0245, longitude: 28.8322),
+        latitudinalMeters: 6000,
+        longitudinalMeters: 6000
+    )
+
+    // Anything the user would lose by closing the sheet.
+    private var hasInput: Bool {
+        !ReportService.cleanedDescription(description).isEmpty || selectedImage != nil
+    }
 
     private var locationDenied: Bool {
         locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
@@ -201,9 +216,17 @@ struct NewReportView: View {
                 ReportDetailView(reportID: report.id, reportService: reportService)
             }
             .navigationTitle("New Report")
+            // Swiping the sheet down would lose the report; Cancel asks first.
+            .interactiveDismissDisabled(hasInput)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        if hasInput { confirmDiscard = true } else { dismiss() }
+                    }
+                    .confirmationDialog("Discard this report?", isPresented: $confirmDiscard, titleVisibility: .visible) {
+                        Button("Discard Report", role: .destructive) { dismiss() }
+                        Button("Keep Editing", role: .cancel) {}
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isSubmitting ? "Submitting…" : "Submit") {

@@ -164,6 +164,43 @@ struct PhotoCompressionTests {
         let decoded = try #require(UIImage(data: data))
         #expect(decoded.size == CGSize(width: 400, height: 300))
     }
+
+    @Test func thumbnailIsSmallAndFitsItsLimit() throws {
+        let data = try #require(ReportService.thumbnailJPEG(noisyImage(width: 4000, height: 3000)))
+        #expect(data.count < ReportService.maxThumbnailBytes)
+
+        let decoded = try #require(UIImage(data: data))
+        #expect(decoded.size == CGSize(width: 192, height: 144))
+    }
+}
+
+@Suite("Map pin groups")
+struct ReportClusterTests {
+    @Test func nearbyReportsShareOnePin() {
+        let a = makeReport(id: "a")
+        let b = makeReport(id: "b", latitude: center.latitude + 0.0001) // ~11 m
+        let far = makeReport(id: "far", latitude: center.latitude + 0.05) // ~5.5 km
+
+        let clusters = ReportCluster.group([far, b, a], cellSize: 0.01)
+
+        #expect(clusters.map { $0.reports.map(\.id) } == [["a", "b"], ["far"]])
+        #expect(clusters[0].id == "a")
+    }
+
+    @Test func pinIsInTheMiddleOfItsReports() {
+        let south = makeReport(latitude: 47.003)
+        let north = makeReport(latitude: 47.005)
+        let clusters = ReportCluster.group([south, north], cellSize: 0.01)
+        #expect(clusters.count == 1)
+        #expect(abs(clusters[0].coordinate.latitude - 47.004) < 0.000001)
+    }
+
+    @Test func zoomedInShowsEveryReport() {
+        #expect(ReportCluster.cellSize(forLatitudeSpan: 0.004) == 0)
+        let reports = [makeReport(id: "a"), makeReport(id: "b")]
+        #expect(ReportCluster.group(reports, cellSize: 0).count == 2)
+        #expect(abs(ReportCluster.cellSize(forLatitudeSpan: 0.12) - 0.01) < 0.000001)
+    }
 }
 
 @Suite("Duplicate detection")

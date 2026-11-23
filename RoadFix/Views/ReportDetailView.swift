@@ -89,6 +89,10 @@ struct ReportDetailView: View {
                     StatusBadge(status: report.status)
                 }
 
+                if isStaff {
+                    StatusPicker(report: report, reportService: reportService)
+                }
+
                 ReportAddressView(report: report, reportService: reportService)
                     .font(.subheadline)
 
@@ -161,6 +165,8 @@ private struct StaffNoteEditor: View {
     let report: Report
     @ObservedObject var reportService: ReportService
     @State private var note = ""
+    // Set when the server confirms the save; cleared by the next edit.
+    @State private var isSaved = false
 
     private var hasChanges: Bool {
         note.trimmingCharacters(in: .whitespacesAndNewlines) != (report.staffNote ?? "")
@@ -177,14 +183,58 @@ private struct StaffNoteEditor: View {
                     if newValue.count > ReportService.maxStaffNoteLength {
                         note = String(newValue.prefix(ReportService.maxStaffNoteLength))
                     }
+                    if hasChanges { isSaved = false }
                 }
-            Button("Save Note") {
-                reportService.updateStaffNote(report, to: note)
+            HStack(spacing: 12) {
+                Button("Save Note") {
+                    reportService.updateStaffNote(report, to: note) { isSaved = true }
+                }
+                .buttonStyle(.bordered)
+                .disabled(!hasChanges)
+                if isSaved {
+                    Label("Note saved", systemImage: "checkmark.circle.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(.green)
+                }
             }
-            .buttonStyle(.bordered)
-            .disabled(!hasChanges)
         }
         .onAppear { note = report.staffNote ?? "" }
+    }
+}
+
+/// Staff's status control, on the dashboard and in Report Detail. Everyone
+/// sees a status change at once, so a tap asks first instead of changing it.
+struct StatusPicker: View {
+    let report: Report
+    @ObservedObject var reportService: ReportService
+    @State private var requestedStatus: ReportStatus?
+
+    var body: some View {
+        Picker("Status", selection: Binding(
+            get: { report.status },
+            set: { newStatus in requestedStatus = newStatus == report.status ? nil : newStatus }
+        )) {
+            ForEach(ReportStatus.allCases, id: \.self) { status in
+                Text(status.title).tag(status)
+            }
+        }
+        .pickerStyle(.segmented)
+        .confirmationDialog(
+            "Change the status?",
+            isPresented: Binding(
+                get: { requestedStatus != nil },
+                set: { if !$0 { requestedStatus = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: requestedStatus
+        ) { status in
+            Button("Mark as \(status.title)") {
+                reportService.updateStatus(report, to: status)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { status in
+            Text("Everyone will see this report as \(status.title).")
+        }
     }
 }
 
@@ -249,8 +299,14 @@ private struct EditReportView: View {
 // Loads a report's photo from reportPhotos/{id}. Used by both the report
 // detail sheet and the staff dashboard; size it with .frame at the call site.
 struct ReportPhotoView: View {
+    enum Size {
+        case full
+        case thumbnail // the small copy, for list rows
+    }
+
     let reportID: String
     @ObservedObject var reportService: ReportService
+    var size: Size = .full
 
     @State private var image: UIImage?
     @State private var failed = false
@@ -270,7 +326,10 @@ struct ReportPhotoView: View {
             }
         }
         .task(id: reportID) {
-            image = await reportService.photo(for: reportID)
+            switch size {
+            case .full: image = await reportService.photo(for: reportID)
+            case .thumbnail: image = await reportService.thumbnail(for: reportID)
+            }
             failed = image == nil
         }
     }

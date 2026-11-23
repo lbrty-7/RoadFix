@@ -56,6 +56,9 @@ class ReportService: ObservableObject {
     private let photoCache = NSCache<NSString, UIImage>()
     private var addressCache: [String: String] = [:]
     private static let maxPhotoBytes = 900 * 1024
+    // The dashboard shows photos at 64 pt, 192 px on a 3x screen.
+    static let thumbnailSide: CGFloat = 192
+    static let maxThumbnailBytes = 50 * 1024
     // firestore.rules allows twice these lengths, because it counts
     // characters differently from Swift (an emoji can count as several).
     static let maxDescriptionLength = 1000
@@ -76,6 +79,10 @@ class ReportService: ObservableObject {
 
     private var photosCollection: CollectionReference {
         db.collection("reportPhotos")
+    }
+
+    private var thumbnailsCollection: CollectionReference {
+        db.collection("reportThumbnails")
     }
 
     // Live-syncs the newest reports (map, dashboard) and all of the user's
@@ -183,12 +190,18 @@ class ReportService: ObservableObject {
         }
         // firestore.rules enforces the same wait; checking here first gives a
         // clear message instead of a generic permission error.
-        if let lastSubmittedAt, Date().timeIntervalSince(lastSubmittedAt) < Self.minSecondsBetweenReports {
-            completion(.failed(String(localized: "You can send one report per minute. Wait a moment and try again.")))
+        if let wait = Self.secondsUntilNextReport(after: lastSubmittedAt) {
+            completion(.failed(String(localized: "You can send one report per minute. Try again in \(wait) s.")))
             return
         }
-        let document = reportsCollection.document()
         let photoData = image.flatMap(Self.compressedJPEG)
+        // Better to say so than to file the report without the photo.
+        if image != nil && photoData == nil {
+            completion(.failed(String(localized: "This photo is too large to send. Choose another photo or remove it.")))
+            return
+        }
+        let thumbnailData = image.flatMap(Self.thumbnailJPEG)
+        let document = reportsCollection.document()
         var data: [String: Any] = [
             "category": category.rawValue,
             "description": Self.cleanedDescription(description),
@@ -204,8 +217,9 @@ class ReportService: ObservableObject {
             data["address"] = address
         }
         // The photo lives in its own reportPhotos/{reportId} doc so the live
-        // reports listener doesn't download every image. A batch writes both
-        // or neither, and lets firestore.rules check the photo's report owner.
+        // reports listener doesn't download every image, and a small copy in
+        // reportThumbnails/{reportId} for the dashboard list. A batch writes
+        // all or none, and lets firestore.rules check the photo's report owner.
         // lastReportAt on the user's profile is how firestore.rules limits
         // each account to one report per minute.
         let batch = db.batch()
@@ -213,6 +227,9 @@ class ReportService: ObservableObject {
         batch.updateData(["lastReportAt": FieldValue.serverTimestamp()], forDocument: db.collection("users").document(uid))
         if let photoData {
             batch.setData(["data": photoData], forDocument: photosCollection.document(document.documentID))
+        }
+        if let thumbnailData {
+            batch.setData(["data": thumbnailData], forDocument: thumbnailsCollection.document(document.documentID))
         }
         commit(batch, completion: completion)
     }
@@ -302,6 +319,30 @@ class ReportService: ObservableObject {
         return image
     }
 
+    // The small copy for list rows, a few KB instead of ~300 KB. Reports
+    // filed before thumbnails existed fall back to the full photo.
+    func thumbnail(for reportID: String) async -> UIImage? {
+        let key = "thumbnail-\(reportID)" as NSString
+        if let cached = photoCache.object(forKey: key) {
+            return cached
+        }
+        guard let snapshot = try? await thumbnailsCollection.document(reportID).getDocument(),
+              let data = snapshot.data()?["data"] as? Data,
+              let image = UIImage(data: data) else {
+            return await photo(for: reportID)
+        }
+        photoCache.setObject(image, forKey: key)
+        return image
+    }
+
+    /// Seconds left before the one-per-minute limit lets another report
+    /// through, or nil when one can be sent now.
+    static func secondsUntilNextReport(after lastSubmittedAt: Date?, now: Date = Date()) -> Int? {
+        guard let lastSubmittedAt else { return nil }
+        let left = minSecondsBetweenReports - now.timeIntervalSince(lastSubmittedAt)
+        return left > 0 ? Int(left.rounded(.up)) : nil
+    }
+
     // A second tap removes the upvote, so each user counts at most once.
     func toggleUpvote(_ report: Report) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -325,11 +366,15 @@ class ReportService: ObservableObject {
     }
 
     // A note from staff that everyone can read, e.g. "Crew booked for Monday".
-    // An empty note removes it.
-    func updateStaffNote(_ report: Report, to note: String) {
+    // An empty note removes it. onSaved runs once the server has it.
+    func updateStaffNote(_ report: Report, to note: String, onSaved: @escaping () -> Void = {}) {
         let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
         let value: Any = trimmed.isEmpty ? FieldValue.delete() : trimmed
-        reportsCollection.document(report.id).updateData(["staffNote": value], completion: failureHandler(String(localized: "Couldn't save the note.")))
+        let onFailure = failureHandler(String(localized: "Couldn't save the note."))
+        reportsCollection.document(report.id).updateData(["staffNote": value]) { error in
+            if error == nil { onSaved() }
+            onFailure(error)
+        }
     }
 
     // The reporter may fix their own report while it's still "reported".
@@ -354,10 +399,12 @@ class ReportService: ObservableObject {
         let batch = db.batch()
         batch.deleteDocument(reportsCollection.document(report.id))
         batch.deleteDocument(photosCollection.document(report.id))
+        batch.deleteDocument(thumbnailsCollection.document(report.id))
         let onFailure = failureHandler(String(localized: "Couldn't delete the report."))
         batch.commit { [weak self] error in
             if error == nil {
                 self?.photoCache.removeObject(forKey: report.id as NSString)
+                self?.photoCache.removeObject(forKey: "thumbnail-\(report.id)" as NSString)
             }
             onFailure(error)
         }
@@ -384,21 +431,36 @@ class ReportService: ObservableObject {
     // and lower JPEG quality until the photo fits under maxPhotoBytes
     // (the same limit firestore.rules enforces).
     static func compressedJPEG(_ image: UIImage) -> Data? {
-        let maxSide: CGFloat = 1280
+        let scaled = resized(image, maxSide: 1280)
+        for quality in stride(from: 0.8, through: 0.2, by: -0.15) {
+            if let data = scaled.jpegData(compressionQuality: quality), data.count < maxPhotoBytes {
+                return data
+            }
+        }
+        return nil
+    }
+
+    // Under maxThumbnailBytes, the same limit firestore.rules enforces.
+    static func thumbnailJPEG(_ image: UIImage) -> Data? {
+        let scaled = resized(image, maxSide: thumbnailSide)
+        for quality in stride(from: 0.7, through: 0.1, by: -0.2) {
+            if let data = scaled.jpegData(compressionQuality: quality), data.count < maxThumbnailBytes {
+                return data
+            }
+        }
+        return nil
+    }
+
+    // Scaled down (never up) so the long side is at most maxSide pixels.
+    private static func resized(_ image: UIImage, maxSide: CGFloat) -> UIImage {
         let longest = max(image.size.width, image.size.height)
         let scale = min(1, maxSide / longest)
         let targetSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
-        let resized = UIGraphicsImageRenderer(size: targetSize, format: format).image { _ in
+        return UIGraphicsImageRenderer(size: targetSize, format: format).image { _ in
             image.draw(in: CGRect(origin: .zero, size: targetSize))
         }
-        for quality in stride(from: 0.8, through: 0.2, by: -0.15) {
-            if let data = resized.jpegData(compressionQuality: quality), data.count < maxPhotoBytes {
-                return data
-            }
-        }
-        return nil
     }
 
     static func report(id: String, data: [String: Any]) -> Report? {
