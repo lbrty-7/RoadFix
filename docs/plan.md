@@ -209,11 +209,12 @@ Every issue is in the [Internship evaluation](https://github.com/lbrty-7/RoadFix
 - [ ] [#16](https://github.com/lbrty-7/RoadFix/issues/16) A photo can be attached to a report after it was created
 - [ ] [#23](https://github.com/lbrty-7/RoadFix/issues/23) Reporters can upvote their own reports
 
-### C. Accounts (0 of 4 done)
+### C. Accounts (0 of 5 done)
 - [ ] [#5](https://github.com/lbrty-7/RoadFix/issues/5) Separate development and production configuration
 - [ ] [#18](https://github.com/lbrty-7/RoadFix/issues/18) A wrong staff code silently creates a citizen account
 - [ ] [#19](https://github.com/lbrty-7/RoadFix/issues/19) The login error still shows on the Create Account screen
 - [ ] [#21](https://github.com/lbrty-7/RoadFix/issues/21) Login, Create Account and Settings texts aren't translated
+- [ ] [#31](https://github.com/lbrty-7/RoadFix/issues/31) Map every error to a clear message
 
 ### D. Reports (3 of 6 done)
 - [ ] [#7](https://github.com/lbrty-7/RoadFix/issues/7) More unit tests for account and report logic
