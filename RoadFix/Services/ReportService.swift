@@ -188,6 +188,13 @@ class ReportService: ObservableObject {
             completion(.failed(String(localized: "You're signed out. Sign in and try again.")))
             return
         }
+        // firestore.rules checks the one-per-minute wait when a report reaches
+        // the server. Two reports saved offline would arrive together and the
+        // second would be refused and lost, so wait for the first one.
+        if Self.hasReportWaitingToSend(in: myReports) {
+            completion(.failed(String(localized: "One of your reports is still waiting to be sent. You can send another once you're back online.")))
+            return
+        }
         // firestore.rules enforces the same wait; checking here first gives a
         // clear message instead of a generic permission error.
         if let wait = Self.secondsUntilNextReport(after: lastSubmittedAt) {
@@ -333,6 +340,12 @@ class ReportService: ObservableObject {
         }
         photoCache.setObject(image, forKey: key)
         return image
+    }
+
+    /// True while one of the user's reports is saved on the phone but not on
+    /// the server yet ("Waiting to Send" in My Reports).
+    static func hasReportWaitingToSend(in reports: [Report]) -> Bool {
+        reports.contains { $0.isPending }
     }
 
     /// Seconds left before the one-per-minute limit lets another report
