@@ -382,6 +382,16 @@ struct ReportLimitTests {
         #expect(ReportService.secondsUntilNextReport(after: sent, now: sent + 3600) == nil)
     }
 
+    // A second report must wait while one is still saved only on the phone,
+    // or the rules would refuse it when both reach the server (#34).
+    @Test func reportWaitingToSendBlocksANewOne() {
+        var waiting = makeReport()
+        waiting.isPending = true
+        #expect(!ReportService.hasReportWaitingToSend(in: []))
+        #expect(!ReportService.hasReportWaitingToSend(in: [makeReport(), makeReport()]))
+        #expect(ReportService.hasReportWaitingToSend(in: [makeReport(), waiting]))
+    }
+
     @Test func submitOutcomes() {
         #expect(SubmitOutcome.failed("No").isFailure)
         #expect(!SubmitOutcome.sent.isFailure)

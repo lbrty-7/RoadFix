@@ -1011,6 +1011,22 @@
         }
       }
     },
+    "One of your reports is still waiting to be sent. You can send another once you're back online." : {
+      "localizations" : {
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una dintre sesizările dumneavoastră așteaptă încă să fie trimisă. Puteți trimite alta după ce reveniți online."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Одна из ваших заявок ещё ожидает отправки. Новую можно будет отправить, когда вы снова будете в сети."
+          }
+        }
+      }
+    },
     "Reports here: %lld" : {
       "localizations" : {
         "ro" : {
