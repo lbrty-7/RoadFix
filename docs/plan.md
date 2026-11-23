@@ -55,7 +55,7 @@ The staff invite code is checked by the Firestore rules on the server, not in th
 
 ### In progress and planned
 
-See the [roadmap](#8-roadmap-by-package) below: every open issue is in one of five packages.
+See the [roadmap](#8-roadmap-by-package) below: every open issue is in one of six packages.
 
 ## 4. Architecture
 
@@ -188,7 +188,7 @@ v0.1.0 to v0.4.0 were tagged afterwards, on 16 November 2026, from the commits o
 | v0.7.0 | Firestore rules: package B |
 | v0.8.0 | Accounts: package C |
 | v0.9.0 | Reports and UX: the rest of package D |
-| v1.0.0 | Monitoring and documentation (package E), protected `main` (#11): the final hand-in |
+| v1.0.0 | Monitoring and documentation (package E), code quality (package F), protected `main` (#11): the final hand-in |
 
 A bug fix found between these goes out as a PATCH, for example v0.6.1.
 
@@ -224,15 +224,17 @@ Every issue is in the [Internship evaluation](https://github.com/lbrty-7/RoadFix
 - [x] [#24](https://github.com/lbrty-7/RoadFix/issues/24) My Reports misses older reports
 - [ ] [#25](https://github.com/lbrty-7/RoadFix/issues/25) UX improvements found while testing
 
-### E. Monitoring and documentation (0 of 6 done)
+### E. Monitoring and documentation (0 of 5 done)
 - [ ] [#8](https://github.com/lbrty-7/RoadFix/issues/8) Replace `print` with structured logging
 - [ ] [#9](https://github.com/lbrty-7/RoadFix/issues/9) Show the exact location and cause of errors in Sentry
 - [ ] [#10](https://github.com/lbrty-7/RoadFix/issues/10) Investigate the app hang at launch reported by Sentry
 - [ ] [#12](https://github.com/lbrty-7/RoadFix/issues/12) README with setup, tests, CI/CD and architecture
 - [ ] [#29](https://github.com/lbrty-7/RoadFix/issues/29) This app plan
+
+### F. Code quality and clean code (0 of 1 done)
 - [ ] [#32](https://github.com/lbrty-7/RoadFix/issues/32) Split functions and views longer than 30 lines
 
-**Suggested order:** B first, because those are security holes in data that's already live. Then C and D (bugs users see), then the rest of A (release automation before v1.0.0), and E last, so the documentation describes the final app.
+**Suggested order:** B first, because those are security holes in data that's already live. Then C and D (bugs users see), then the rest of A (release automation before v1.0.0), and E last, so the documentation describes the final app. F can be done screen by screen, right after the other work on the same files is merged, so the two don't clash.
 
 ## 9. Risks and limitations
 
