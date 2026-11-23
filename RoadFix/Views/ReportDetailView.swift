@@ -180,9 +180,8 @@ private struct StaffNoteEditor: View {
                 .lineLimit(2...5)
                 .textFieldStyle(.roundedBorder)
                 .onChange(of: note) { _, newValue in
-                    if newValue.count > ReportService.maxStaffNoteLength {
-                        note = String(newValue.prefix(ReportService.maxStaffNoteLength))
-                    }
+                    let limited = ReportService.limited(newValue, to: ReportService.maxStaffNoteLength)
+                    if limited != newValue { note = limited }
                     if hasChanges { isSaved = false }
                 }
             HStack(spacing: 12) {
@@ -272,9 +271,8 @@ private struct EditReportView: View {
                     TextField("What's the issue?", text: $description, axis: .vertical)
                         .lineLimit(3...6)
                         .onChange(of: description) { _, newValue in
-                            if newValue.count > ReportService.maxDescriptionLength {
-                                description = String(newValue.prefix(ReportService.maxDescriptionLength))
-                            }
+                            let limited = ReportService.limited(newValue, to: ReportService.maxDescriptionLength)
+                            if limited != newValue { description = limited }
                         }
                 }
             }

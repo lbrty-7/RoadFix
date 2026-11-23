@@ -123,9 +123,8 @@ struct NewReportView: View {
                     TextField("What's the issue?", text: $description, axis: .vertical)
                         .lineLimit(3...6)
                         .onChange(of: description) { _, newValue in
-                            if newValue.count > ReportService.maxDescriptionLength {
-                                description = String(newValue.prefix(ReportService.maxDescriptionLength))
-                            }
+                            let limited = ReportService.limited(newValue, to: ReportService.maxDescriptionLength)
+                            if limited != newValue { description = limited }
                         }
                 }
 

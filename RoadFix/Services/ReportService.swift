@@ -392,6 +392,12 @@ class ReportService: ObservableObject {
         text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    // The forms cut typed or pasted text at maxDescriptionLength or
+    // maxStaffNoteLength characters (an emoji counts as one).
+    static func limited(_ text: String, to maxLength: Int) -> String {
+        text.count > maxLength ? String(text.prefix(maxLength)) : text
+    }
+
     // Staff can delete any report; reporters can withdraw their own. The
     // report and its photo doc go in one batch so a photo is never left
     // behind without its report.

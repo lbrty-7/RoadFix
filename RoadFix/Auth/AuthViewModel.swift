@@ -299,7 +299,8 @@ final class AuthViewModel: ObservableObject {
     // Static and nonisolated so it can run inside Firebase's Sendable callbacks.
     // Wrong passwords, taken emails and the like are the user's input, not
     // bugs; only errors that fall through to the generic message go to Sentry.
-    private nonisolated static func mapAuthError(_ error: Error) -> String {
+    // Internal (not private) so unit tests can check the messages.
+    nonisolated static func mapAuthError(_ error: Error) -> String {
         let nsError = error as NSError
         guard let code = AuthErrorCode(rawValue: nsError.code) else {
             CrashReporting.record(error, action: "account")

@@ -6,6 +6,7 @@
 import Testing
 import UIKit
 import CoreLocation
+import FirebaseAuth
 import FirebaseFirestore
 @testable import RoadFix
 
@@ -294,5 +295,163 @@ struct CrashReportingTests {
         #expect(!CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.permissionDenied.rawValue)))
         #expect(!CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.internal.rawValue)))
         #expect(!CrashReporting.isConnectionProblem(NSError(domain: "RoadFix", code: 1)))
+    }
+}
+
+// MARK: - Sign-in and account errors
+
+private func authError(_ code: AuthErrorCode) -> NSError {
+    NSError(domain: AuthErrorDomain, code: code.rawValue)
+}
+
+@Suite("Sign-in error messages")
+struct AuthErrorMessageTests {
+    @Test func wrongPasswordAndUnknownAccountLookTheSame() {
+        // Different messages would tell an attacker which emails have accounts.
+        let wrongPassword = AuthViewModel.mapAuthError(authError(.wrongPassword))
+        #expect(wrongPassword == String(localized: "Incorrect email or password."))
+        #expect(AuthViewModel.mapAuthError(authError(.userNotFound)) == wrongPassword)
+        #expect(AuthViewModel.mapAuthError(authError(.invalidCredential)) == wrongPassword)
+    }
+
+    @Test func networkErrorGivesTheNetworkMessage() {
+        #expect(AuthViewModel.mapAuthError(authError(.networkError))
+            == String(localized: "Network error. Check your connection and try again."))
+    }
+
+    @Test func signUpProblemsHaveTheirOwnMessages() {
+        #expect(AuthViewModel.mapAuthError(authError(.emailAlreadyInUse))
+            == String(localized: "An account with that email already exists."))
+        #expect(AuthViewModel.mapAuthError(authError(.invalidEmail))
+            == String(localized: "That email address doesn't look right."))
+        #expect(AuthViewModel.mapAuthError(authError(.weakPassword))
+            == String(localized: "Password must be at least 12 characters."))
+        #expect(AuthViewModel.mapAuthError(authError(.tooManyRequests))
+            == String(localized: "Too many attempts. Wait a few minutes and try again."))
+    }
+
+    @Test func unknownErrorsGetTheGenericMessage() {
+        let generic = String(localized: "Something went wrong, try again.")
+        #expect(AuthViewModel.mapAuthError(NSError(domain: "RoadFix", code: 999_999)) == generic)
+        #expect(AuthViewModel.mapAuthError(authError(.internalError)) == generic)
+    }
+
+    @Test func changePasswordExplainsAWrongCurrentPassword() {
+        #expect(AuthViewModel.changePasswordErrorMessage(authError(.wrongPassword))
+            == String(localized: "Your current password is incorrect."))
+        #expect(AuthViewModel.changePasswordErrorMessage(authError(.userMismatch))
+            == String(localized: "You're signed out. Sign in and try again."))
+        // Anything else falls back to the sign-in messages.
+        #expect(AuthViewModel.changePasswordErrorMessage(authError(.networkError))
+            == AuthViewModel.mapAuthError(authError(.networkError)))
+    }
+}
+
+// MARK: - Report rules
+
+@Suite("Report limits")
+struct ReportLimitTests {
+    @Test func textIsCutAtTheLimit() {
+        let long = String(repeating: "a", count: ReportService.maxDescriptionLength + 1)
+        #expect(ReportService.limited(long, to: ReportService.maxDescriptionLength).count == ReportService.maxDescriptionLength)
+        #expect(ReportService.limited("Deep hole", to: ReportService.maxDescriptionLength) == "Deep hole")
+        #expect(ReportService.limited("Crew booked for Monday", to: 4) == "Crew")
+    }
+
+    @Test func anEmojiCountsAsOneCharacter() {
+        #expect(ReportService.limited("👍👍👍", to: 2) == "👍👍")
+    }
+
+    // firestore.rules allows twice the app's limits (2000 and 1000), since
+    // it counts an emoji as more than one character.
+    @Test func limitsFitTheRules() {
+        #expect(ReportService.maxDescriptionLength * 2 <= 2000)
+        #expect(ReportService.maxStaffNoteLength * 2 <= 1000)
+        let emoji = ReportService.limited(String(repeating: "👍", count: 2000), to: ReportService.maxDescriptionLength)
+        #expect(emoji.utf16.count <= 2000)
+    }
+
+    @Test func oneReportPerMinute() {
+        let sent = Date(timeIntervalSince1970: 1_700_000_000)
+        #expect(ReportService.secondsUntilNextReport(after: nil) == nil)
+        #expect(ReportService.secondsUntilNextReport(after: sent, now: sent) == 60)
+        #expect(ReportService.secondsUntilNextReport(after: sent, now: sent + 20) == 40)
+        // Rounded up, so it never says "0 s" while still blocked.
+        #expect(ReportService.secondsUntilNextReport(after: sent, now: sent + 59.5) == 1)
+        #expect(ReportService.secondsUntilNextReport(after: sent, now: sent + 60) == nil)
+        #expect(ReportService.secondsUntilNextReport(after: sent, now: sent + 3600) == nil)
+    }
+
+    @Test func submitOutcomes() {
+        #expect(SubmitOutcome.failed("No").isFailure)
+        #expect(!SubmitOutcome.sent.isFailure)
+        #expect(!SubmitOutcome.queued.isFailure)
+    }
+
+    @Test func pendingSubmitFinishesOnce() {
+        var outcomes: [SubmitOutcome] = []
+        let submit = PendingSubmit { outcomes.append($0) }
+        #expect(!submit.isFinished)
+        submit.finish(.queued)
+        submit.finish(.sent) // the server's answer arriving later is ignored
+        #expect(submit.isFinished)
+        #expect(outcomes == [.queued])
+    }
+}
+
+// MARK: - More Sentry filtering
+
+@Suite("Sentry filtering")
+struct MoreCrashReportingTests {
+    @Test func moreConnectionProblemsAreSkipped() {
+        #expect(CrashReporting.isConnectionProblem(authError(.networkError)))
+        #expect(CrashReporting.isConnectionProblem(NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.deadlineExceeded.rawValue)))
+        #expect(CrashReporting.isConnectionProblem(URLError(.cannotFindHost)))
+    }
+
+    @Test func connectionProblemWrappedTwiceIsSkipped() {
+        let offline = URLError(.notConnectedToInternet) as NSError
+        let middle = NSError(domain: FirestoreErrorDomain, code: FirestoreErrorCode.Code.unknown.rawValue, userInfo: [NSUnderlyingErrorKey: offline])
+        let outer = NSError(domain: "RoadFix", code: 1, userInfo: [NSUnderlyingErrorKey: middle])
+        #expect(CrashReporting.isConnectionProblem(outer))
+    }
+
+    @Test func otherAuthAndURLErrorsAreReported() {
+        #expect(!CrashReporting.isConnectionProblem(authError(.wrongPassword)))
+        #expect(!CrashReporting.isConnectionProblem(URLError(.badURL)))
+        #expect(!CrashReporting.isConnectionProblem(URLError(.badServerResponse)))
+    }
+}
+
+// MARK: - More password rules
+
+@Suite("More password rules")
+struct MorePasswordPolicyTests {
+    @Test func exactlyTwelveCharactersIsEnough() {
+        #expect(PasswordPolicy.isAcceptable("river-stone7"))
+        #expect(!PasswordPolicy.isAcceptable("river-stone"))
+    }
+
+    @Test func commonPasswordsAreCaughtInAnyCase() {
+        #expect(!PasswordPolicy.isAcceptable("PASSWORD1234"))
+        #expect(!PasswordPolicy.isAcceptable("RoadFix12345"))
+    }
+
+    @Test func twoRepeatedCharactersAreTooCommon() {
+        #expect(!PasswordPolicy.isAcceptable("aaaabbbbaaaa"))
+        #expect(PasswordPolicy.isAcceptable("aaabbbcccaaa"))
+    }
+
+    @Test func shortEmailNamesAreNotChecked() {
+        // A 3-letter name like "ana" would block too many passwords.
+        #expect(PasswordPolicy.isAcceptable("banana-river-26", email: "ana@mail.md"))
+    }
+
+    @Test func eachProblemHasItsOwnMessage() {
+        #expect(PasswordPolicy.problem(with: "short") == String(localized: "Use at least 12 characters."))
+        #expect(PasswordPolicy.problem(with: "password1234") == String(localized: "This password is too common. Choose another one."))
+        #expect(PasswordPolicy.problem(with: "maria.ionescu-77", email: "maria.ionescu@mail.md")
+            == String(localized: "Don't use your email address in your password."))
+        #expect(PasswordPolicy.problem(with: "quiet-harbor-77") == nil)
     }
 }
